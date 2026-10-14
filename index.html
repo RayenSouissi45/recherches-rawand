@@ -1,0 +1,1036 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Recherches de Rawand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout : bibliothèque de dossiers de recherche — une barre d'onglets par dossier, puis une colonne de lecture :
+   « En 30 secondes » → outil d'orientation → étapes → détails dépliables → sources */
+:root{
+  --paper:#f6f7fa; --sheet:#ffffff; --ink:#15233a; --muted:#596579; --line:#dce1e9; --soft:#eef1f6;
+  --navy:#0f2947; --gold:#9c6f22; --gold-soft:#f5ecdb;
+  --ok:#1d7448; --ok-bg:#e3f2ea; --warn:#8f5600; --warn-bg:#fcf0d8; --risk:#a1352a; --risk-bg:#fae6e2; --info:#1f5c99; --info-bg:#e5eefa;
+  --f-display:"Literata", Georgia, "Times New Roman", serif;
+  --f-body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0d1420; --sheet:#141d2c; --ink:#e5eaf2; --muted:#9ba7b9; --line:#29344a; --soft:#1a2436;
+  --navy:#a3c3ec; --gold:#dbb066; --gold-soft:#2d2616;
+  --ok:#72d3a0; --ok-bg:#132e1e; --warn:#f1bb6b; --warn-bg:#31260e; --risk:#f28d7e; --risk-bg:#381b17; --info:#8dbaf0; --info-bg:#14243a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0d1420; --sheet:#141d2c; --ink:#e5eaf2; --muted:#9ba7b9; --line:#29344a; --soft:#1a2436;
+  --navy:#a3c3ec; --gold:#dbb066; --gold-soft:#2d2616;
+  --ok:#72d3a0; --ok-bg:#132e1e; --warn:#f1bb6b; --warn-bg:#31260e; --risk:#f28d7e; --risk-bg:#381b17; --info:#8dbaf0; --info-bg:#14243a; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;padding-inline:16px;padding-block:0 72px}
+.wrap{max-width:900px;margin:0 auto}
+a{color:var(--navy);text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--f-display);color:var(--navy);text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:clamp(1.7rem,4.5vw,2.4rem);font-weight:700}
+h2{font-size:clamp(1.35rem,3.4vw,1.65rem);font-weight:700}
+h3{font-size:1.1rem;font-weight:600}
+p{margin:0}
+ul,ol{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+.ref{font-family:var(--f-mono);font-size:.85em;font-weight:500;color:var(--gold);white-space:nowrap}
+.eyebrow{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+abbr[title]{text-decoration:underline dotted var(--gold);text-underline-offset:3px;cursor:help}
+
+/* En-tête et onglets */
+header.top{padding-block:28px 18px;display:grid;gap:10px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--muted);font-size:.88rem}
+.meta b{color:var(--ink)}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--paper);margin-inline:-16px;padding:8px 16px;border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto}
+nav.tabs a{flex:0 0 auto;display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-weight:600;font-size:.9rem;padding:8px 14px;border-radius:999px;border:1px solid transparent}
+nav.tabs a .num{font-family:var(--f-display);color:var(--gold)}
+nav.tabs a[aria-current="page"]{background:var(--navy);color:var(--paper)}
+nav.tabs a[aria-current="page"] .num{color:var(--gold-soft)}
+nav.tabs a:not([aria-current="page"]):hover{border-color:var(--line);color:var(--ink)}
+
+main{padding-top:24px}
+.panel[hidden]{display:none}
+.panel{display:grid;gap:30px}
+.section{display:grid;gap:14px;scroll-margin-top:70px}
+.lead{color:var(--muted);max-width:66ch}
+
+/* Accueil */
+.homegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.homecard{display:grid;gap:10px;align-content:start;background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px;text-decoration:none;color:var(--ink);min-width:0}
+.homecard:hover{border-color:var(--gold)}
+.homecard .n{font-family:var(--f-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
+.homecard h3{font-size:1.15rem}
+.homecard .go{font-weight:600;color:var(--navy);font-size:.9rem}
+.howto{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.howto div{background:var(--soft);border-radius:8px;padding:12px 14px;font-size:.92rem;display:grid;gap:4px}
+
+/* Encadrés */
+.tldr{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:12px}
+.tldr ol{padding:0;list-style:none;display:grid;gap:10px;counter-reset:t}
+.tldr li{counter-increment:t;display:grid;grid-template-columns:30px 1fr;gap:10px}
+.tldr li::before{content:counter(t);font-family:var(--f-display);font-weight:700;font-size:1.1rem;color:var(--gold);line-height:1.5}
+.callout{border-radius:8px;padding:12px 14px;display:grid;gap:4px;font-size:.95rem}
+.callout b.t{font-weight:600}
+.c-risk{background:var(--risk-bg);border:1px solid var(--risk)} .c-risk b.t{color:var(--risk)}
+.c-warn{background:var(--warn-bg)} .c-warn b.t{color:var(--warn)}
+.c-info{background:var(--info-bg)} .c-info b.t{color:var(--info)}
+.c-ok{background:var(--ok-bg)} .c-ok b.t{color:var(--ok)}
+
+.pill{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap;vertical-align:1px}
+.p-ok{background:var(--ok-bg);color:var(--ok)} .p-warn{background:var(--warn-bg);color:var(--warn)} .p-risk{background:var(--risk-bg);color:var(--risk)} .p-info{background:var(--info-bg);color:var(--info)}
+
+/* Outil d'orientation */
+.tool{background:var(--sheet);border:1px solid var(--gold);border-radius:10px;padding:18px;display:grid;gap:14px}
+.tool .q{display:grid;gap:6px}
+.tool .q>span{font-weight:600;font-size:.95rem}
+.choices{display:flex;flex-wrap:wrap;gap:6px}
+.choices button{font:500 .88rem var(--f-body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.choices button[aria-pressed="true"]{background:var(--navy);color:var(--paper);border-color:var(--navy)}
+.result{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:8px}
+.result .rcard{background:var(--soft);border-radius:8px;padding:10px 12px;display:grid;gap:2px}
+.result .rcard b{color:var(--navy)}
+
+/* Étapes / frise */
+.steps{list-style:none;padding:0;display:grid;gap:0}
+.steps li{display:grid;grid-template-columns:44px 1fr;gap:12px;position:relative;padding-bottom:18px}
+.steps li:not(:last-child)::after{content:"";position:absolute;left:21px;top:40px;bottom:0;width:2px;background:var(--line)}
+.steps .dot{width:44px;height:40px;border-radius:8px;background:var(--navy);color:var(--paper);display:grid;place-items:center;font:700 .78rem var(--f-body);text-align:center;line-height:1.1}
+.steps .txt{display:grid;gap:4px;min-width:0;padding-top:2px}
+.steps .txt b{font-size:1rem}
+
+/* Tableaux */
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--sheet)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:.9rem}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--soft)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:500}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* Fiches dépliables */
+details.fiche{background:var(--sheet);border:1px solid var(--line);border-radius:8px}
+details.fiche+details.fiche{margin-top:10px}
+details.fiche>summary{cursor:pointer;list-style:none;padding:13px 16px;display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center}
+details.fiche>summary::-webkit-details-marker{display:none}
+details.fiche>summary .sub{grid-column:1/-1;color:var(--muted);font-size:.88rem}
+details.fiche>summary .chev{font:600 1.1rem var(--f-mono);color:var(--gold);transition:transform .2s}
+details.fiche[open]>summary .chev{transform:rotate(90deg)}
+.body{padding:14px 16px 16px;display:grid;gap:12px;border-top:1px solid var(--line)}
+.body h4{margin:0;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.body ul{padding-left:1.2rem;display:grid;gap:4px}
+.texte{background:var(--paper);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:12px 14px;font-family:var(--f-display);font-size:.97rem;line-height:1.65;display:grid;gap:.55rem}
+.texte .src{font-family:var(--f-body);font-size:.78rem;color:var(--muted)}
+.btn{font:600 .8rem var(--f-body);color:var(--navy);background:var(--sheet);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer;justify-self:start}
+.btn:hover{border-color:var(--gold)}
+
+/* Cartes */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.card{background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:grid;gap:6px;align-content:start;min-width:0}
+.card .big{font-family:var(--f-display);font-size:1.6rem;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.2}
+
+/* Cases à cocher */
+.checklist{list-style:none;padding:0;display:grid;gap:6px}
+.checklist label{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer}
+.checklist input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--navy)}
+.checklist input:checked+span{color:var(--muted);text-decoration:line-through}
+.progress{display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--muted)}
+.bar{flex:1;height:6px;background:var(--line);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .2s}
+
+/* Simulateur */
+.sim{background:var(--sheet);border:1px solid var(--gold);border-radius:10px;padding:18px;display:grid;gap:14px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.field{display:grid;gap:4px;font-size:.9rem}
+.field label{font-weight:600}
+.field input[type=number],.field select{font:500 1rem var(--f-body);padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);width:100%}
+.toggle{display:flex;align-items:center;gap:8px;font-size:.9rem}
+.toggle input{width:18px;height:18px;accent-color:var(--navy)}
+.out{display:grid;gap:6px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px dashed var(--line);font-variant-numeric:tabular-nums}
+.row.total{border-bottom:0;font-weight:700;font-size:1.05rem;color:var(--navy)}
+.stack{display:flex;height:16px;border-radius:999px;overflow:hidden;background:var(--line)}
+.stack i{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.82rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend b{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+.template{background:var(--paper);border:1px dashed var(--line);border-radius:8px;padding:14px;font-size:.9rem;white-space:pre-wrap;font-family:var(--f-body)}
+
+.sources{columns:2 280px;column-gap:28px;font-size:.88rem;padding-left:1.1rem}
+.sources li{break-inside:avoid;margin-bottom:6px}
+.glossary{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}
+.glossary div{background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:.9rem}
+.glossary b{color:var(--navy);font-family:var(--f-mono);font-size:.85rem}
+.assume{background:var(--soft);border-radius:8px;padding:12px 14px;font-size:.9rem;display:grid;gap:4px}
+.toc-in{display:flex;flex-wrap:wrap;gap:6px}
+.toc-in a{font-size:.82rem;font-weight:500;text-decoration:none;color:var(--muted);background:var(--sheet);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.toc-in a:hover{color:var(--ink);border-color:var(--gold)}
+footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem;display:grid;gap:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <span class="eyebrow">Cabinet Rawand Ghanmi · Marseille</span>
+  <h1>Recherches juridiques et pratiques</h1>
+  <div class="meta"><span>Mise à jour : <b>14 octobre 2026</b></span><span>Sources officielles vérifiées</span><span>3 dossiers</span></div>
+</header>
+
+<nav class="tabs" aria-label="Dossiers">
+  <a href="#accueil" data-tab="accueil">Accueil</a>
+  <a href="#aes" data-tab="aes"><span class="num">1</span> Admission exceptionnelle</a>
+  <a href="#nettoyage" data-tab="nettoyage"><span class="num">2</span> Campagne de nettoyage</a>
+  <a href="#boulangerie" data-tab="boulangerie"><span class="num">3</span> Boulangerie : Urssaf et impôts</a>
+</nav>
+
+<main>
+
+<!-- ===================================================== ACCUEIL -->
+<section class="panel" id="p-accueil" data-panel="accueil">
+  <div class="section">
+    <h2>Vos 3 recherches</h2>
+    <p class="lead">Chaque dossier commence par l'essentiel en 30 secondes, puis un outil qui vous oriente selon la situation du client. Les détails sont dans des fiches que vous ouvrez seulement si vous en avez besoin.</p>
+    <div class="homegrid">
+      <a class="homecard" href="#aes"><span class="n">1</span><h3>Admission exceptionnelle au séjour</h3><p class="muted small">Tous les articles (L. 435-1 à L. 435-4), textes liés, circulaires, accords bilatéraux, procédure, recours et jurisprudence.</p><span class="go">Ouvrir le dossier →</span></a>
+      <a class="homecard" href="#nettoyage"><span class="n">2</span><h3>Campagne de nettoyage à Marseille</h3><p class="muted small">Qui contacter (Ville, préfecture de police, Métropole), délais, assurance, sécurité, mineurs, déchets, modèle de courrier.</p><span class="go">Ouvrir le dossier →</span></a>
+      <a class="homecard" href="#boulangerie"><span class="n">3</span><h3>Boulangerie : papiers, Urssaf et impôts</h3><p class="muted small">Papiers pour s'installer, choix du statut, cotisations, TVA, impôt, CFE, et un simulateur de charges.</p><span class="go">Ouvrir le dossier →</span></a>
+    </div>
+  </div>
+  <div class="section">
+    <h3>Comment lire ce site</h3>
+    <div class="howto">
+      <div><b>Mots soulignés en pointillés</b><span class="muted">Passez la souris ou touchez-les : leur définition s'affiche.</span></div>
+      <div><b><span class="pill p-ok">Vérifié</span> <span class="pill p-warn">À confirmer</span></b><span class="muted">Indique si l'information vient d'un texte officiel lu directement ou doit être confirmée.</span></div>
+      <div><b>Cases à cocher</b><span class="muted">Vos coches restent enregistrées sur votre appareil.</span></div>
+      <div><b>Bouton « Copier »</b><span class="muted">Copie un article de loi ou un modèle de courrier, prêt à coller.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================================================== 1 AES -->
+<section class="panel" id="p-aes" data-panel="aes" hidden>
+  <div class="section">
+    <span class="eyebrow">Dossier 1 · Droit des étrangers</span>
+    <h2>Admission exceptionnelle au séjour : tous les articles et bases légales</h2>
+    <div class="toc-in"><a href="#aes-30s">En 30 s</a><a href="#aes-tool">Quel article ?</a><a href="#aes-articles">Les articles</a><a href="#aes-lies">Textes liés</a><a href="#aes-circ">Circulaires</a><a href="#aes-nat">Algérie · Tunisie · Maroc</a><a href="#aes-proc">Procédure et recours</a><a href="#aes-jur">Jurisprudence</a><a href="#aes-check">Avant de déposer</a><a href="#aes-gloss">Glossaire</a><a href="#aes-src">Sources</a></div>
+  </div>
+
+  <div class="section" id="aes-30s">
+    <div class="tldr">
+      <span class="eyebrow">L'essentiel en 30 secondes</span>
+      <ol>
+        <li><span><b>Base légale :</b> <abbr title="Code de l'entrée et du séjour des étrangers et du droit d'asile">CESEDA</abbr>, livre IV, titre III, chapitre V, articles <span class="ref">L. 435-1</span> à <span class="ref">L. 435-4</span>, plus <span class="ref">R. 435-1</span> et <span class="ref">R. 435-2</span>. Textes relus sur Légifrance le 14/10/2026 <span class="pill p-ok">Vérifié</span></span></li>
+        <li><span><b>Pas un droit :</b> le préfet « peut » régulariser. Le juge contrôle surtout l'erreur manifeste et la procédure.</span></li>
+        <li><span><b>Plus de 10 ans en France :</b> avant tout refus, le préfet doit consulter la commission du titre de séjour.</span></li>
+        <li><span><b>Circulaire du 23 janvier 2025</b> (« Retailleau ») : 7 ans de présence comme repère, français, refus suivi d'une <abbr title="Obligation de quitter le territoire français">OQTF</abbr>. Le client ne peut pas l'invoquer devant le juge.</span></li>
+        <li><span><b>Coût :</b> 650 € au total depuis le 1er mai 2026, dont 100 € payés au dépôt et perdus en cas de refus.</span></li>
+        <li><span><b>Toujours tester d'abord <span class="ref">L. 423-23</span></b> (vie privée et familiale) : c'est un titre de plein droit, mieux contrôlé par le juge.</span></li>
+      </ol>
+      <div class="callout c-risk"><b class="t">Échéance : 31 décembre 2026</b><span>La régularisation « métiers en tension » (<span class="ref">L. 435-4</span>) s'arrête le 31/12/2026, sauf nouvelle loi. Légifrance indique : « version en vigueur du 28 janvier 2024 au 31 décembre 2026 ».</span></div>
+    </div>
+  </div>
+
+  <div class="section" id="aes-tool">
+    <h3>Quel article pour votre client ?</h3>
+    <p class="lead">Répondez aux questions. Le résultat indique les bases à étudier, dans l'ordre.</p>
+    <div class="tool" id="aesTool">
+      <div class="q"><span>Nationalité</span><div class="choices" data-q="nat"><button type="button" data-v="autre">Autre</button><button type="button" data-v="alg">Algérienne</button><button type="button" data-v="tun">Tunisienne</button><button type="button" data-v="mar">Marocaine</button></div></div>
+      <div class="q"><span>Depuis combien de temps vit-il en France ?</span><div class="choices" data-q="ans"><button type="button" data-v="m3">Moins de 3 ans</button><button type="button" data-v="3a7">3 à 7 ans</button><button type="button" data-v="7a10">7 à 10 ans</button><button type="button" data-v="p10">Plus de 10 ans</button></div></div>
+      <div class="q"><span>Sa situation (plusieurs choix possibles)</span><div class="choices" data-q="sit" data-multi="1"><button type="button" data-v="fam">Famille en France (conjoint, enfants)</button><button type="button" data-v="tension">Salarié dans un métier en tension</button><button type="button" data-v="travail">Salarié, autre métier</button><button type="button" data-v="ase16">Confié à l'ASE entre 16 et 18 ans</button><button type="button" data-v="ase15">Confié à l'ASE avant 16 ans</button><button type="button" data-v="oacas">3 ans chez Emmaüs ou autre OACAS</button><button type="button" data-v="oqtf">OQTF de moins de 3 ans</button><button type="button" data-v="casier">Condamnation au casier</button></div></div>
+      <div class="result" id="aesResult" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="section" id="aes-articles">
+    <h3>Les 4 articles, texte officiel</h3>
+    <p class="lead">Texte copié depuis Légifrance le 14 octobre 2026. Sous chaque texte : ce qu'il faut retenir.</p>
+
+    <details class="fiche" open>
+      <summary><h3>L. 435-1 · Le régime général</h3><span class="chev" aria-hidden="true">›</span><span class="sub">Motifs humanitaires ou exceptionnels · en vigueur depuis le 26/08/2021 (loi n° 2021-1109, art. 25)</span></summary>
+      <div class="body">
+        <div class="texte" id="t1"><p>L'étranger dont l'admission au séjour répond à des considérations humanitaires ou se justifie au regard des motifs exceptionnels qu'il fait valoir peut se voir délivrer une carte de séjour temporaire portant la mention « salarié », « travailleur temporaire » ou « vie privée et familiale », sans que soit opposable la condition prévue à l'article L. 412-1.</p><p>Lorsqu'elle envisage de refuser la demande d'admission exceptionnelle au séjour formée par un étranger qui justifie par tout moyen résider habituellement en France depuis plus de dix ans, l'autorité administrative est tenue de soumettre cette demande pour avis à la commission du titre de séjour prévue à l'article L. 432-14.</p><p>Les modalités d'application du présent article sont définies par décret en Conseil d'Etat.</p><span class="src">Article L. 435-1 du CESEDA (ancien L. 313-14). Légifrance, version en vigueur depuis le 26 août 2021.</span></div>
+        <button class="btn copy" data-target="t1" type="button">Copier le texte</button>
+        <h4>À retenir</h4>
+        <ul>
+          <li>Pas besoin de visa de long séjour (« sans que soit opposable » <span class="ref">L. 412-1</span>).</li>
+          <li>Le préfet examine d'abord une carte « vie privée et familiale », puis, à défaut, une carte « salarié » ou « travailleur temporaire ».</li>
+          <li>Un contrat de travail seul ne suffit pas à constituer un motif exceptionnel.</li>
+          <li>Plus de 10 ans prouvés <b>année par année</b> : la commission du titre de séjour doit être saisie avant un refus (<span class="ref">L. 432-13</span> 4°). Sinon le refus est annulable pour vice de procédure. L'avis de la commission ne lie pas le préfet.</li>
+          <li>La condition de non-polygamie n'est plus dans cet article depuis 2021 : elle est générale, à <span class="ref">L. 412-6</span>.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fiche">
+      <summary><h3>L. 435-2 · Organismes d'accueil (OACAS)</h3><span class="chev" aria-hidden="true">›</span><span class="sub">Emmaüs et structures agréées · 3 ans d'activité · en vigueur depuis le 26/08/2021</span></summary>
+      <div class="body">
+        <div class="texte" id="t2"><p>L'étranger accueilli par les organismes mentionnés au premier alinéa de l'article L. 265-1 du code de l'action sociale et des familles et justifiant de trois années d'activité ininterrompue au sein de ce dernier, du caractère réel et sérieux de cette activité et de ses perspectives d'intégration, peut se voir délivrer une carte de séjour temporaire portant la mention « salarié », « travailleur temporaire » ou « vie privée et familiale », sans que soit opposable la condition prévue à l'article L. 412-1.</p><p>Les modalités d'application du présent article sont définies par décret en Conseil d'Etat.</p><span class="src">Article L. 435-2 du CESEDA. Légifrance, version en vigueur depuis le 26 août 2021.</span></div>
+        <button class="btn copy" data-target="t2" type="button">Copier le texte</button>
+        <h4>À retenir</h4>
+        <ul>
+          <li>3 conditions : 3 ans d'activité ininterrompue, activité réelle et sérieuse, perspectives d'intégration.</li>
+          <li>Pièce clé : le rapport du responsable de l'organisme (missions, heures, compétences, niveau de français, projet).</li>
+          <li><span class="ref">R. 435-2</span> : le préfet choisit la mention de la carte.</li>
+          <li>Refus annulé pour erreur manifeste quand l'intégration est bien prouvée : CAA Bordeaux, 26 oct. 2023, n° 23BX00859.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fiche">
+      <summary><h3>L. 435-3 · Jeunes confiés à l'ASE entre 16 et 18 ans</h3><span class="chev" aria-hidden="true">›</span><span class="sub">Formation qualifiante · demande dans l'année des 18 ans · en vigueur depuis le 09/02/2022 (loi n° 2022-140, art. 41)</span></summary>
+      <div class="body">
+        <div class="texte" id="t3"><p>A titre exceptionnel, l'étranger qui a été confié à l'aide sociale à l'enfance ou à un tiers digne de confiance entre l'âge de seize ans et l'âge de dix-huit ans et qui justifie suivre depuis au moins six mois une formation destinée à lui apporter une qualification professionnelle peut, dans l'année qui suit son dix-huitième anniversaire, se voir délivrer une carte de séjour temporaire portant la mention « salarié » ou « travailleur temporaire », sous réserve du caractère réel et sérieux du suivi de cette formation, de la nature de ses liens avec sa famille restée dans le pays d'origine et de l'avis de la structure d'accueil ou du tiers digne de confiance sur l'insertion de cet étranger dans la société française. La condition prévue à l'article L. 412-1 n'est pas opposable.</p><span class="src">Article L. 435-3 du CESEDA (ancien L. 313-15). Légifrance, version en vigueur depuis le 9 février 2022.</span></div>
+        <button class="btn copy" data-target="t3" type="button">Copier le texte</button>
+        <h4>À retenir</h4>
+        <ul>
+          <li><b>Délai impératif :</b> demande avant le 19e anniversaire.</li>
+          <li>Confié avant 16 ans : ce n'est pas de l'AES, c'est un titre de plein droit (<span class="ref">L. 423-22</span>).</li>
+          <li>Méthode du juge : conditions objectives, puis appréciation globale, contrôle de l'erreur manifeste (CE, 11 déc. 2019, n° 424336).</li>
+          <li>Liens familiaux « ténus ou profondément dégradés » : ne pas les opposer systématiquement (annexe 10 de la circulaire interministérielle du 29 janvier 2016).</li>
+          <li>Jeune en études générales : carte « étudiant » possible selon cette même circulaire.</li>
+          <li>Premier motif de refus aujourd'hui : l'authenticité des actes d'état civil. À vérifier en premier.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="fiche">
+      <summary><h3>L. 435-4 · Métiers en tension</h3><span class="chev" aria-hidden="true">›</span><span class="sub">Expérimental · en vigueur du 28/01/2024 au 31/12/2026 (loi n° 2024-42, art. 27)</span></summary>
+      <div class="body">
+        <div class="texte" id="t4"><p>A titre exceptionnel, et sans que les conditions définies au présent article soient opposables à l'autorité administrative, l'étranger qui a exercé une activité professionnelle salariée figurant dans la liste des métiers et zones géographiques caractérisés par des difficultés de recrutement définie à l'article L. 414-13 durant au moins douze mois, consécutifs ou non, au cours des vingt-quatre derniers mois, qui occupe un emploi relevant de ces métiers et zones et qui justifie d'une période de résidence ininterrompue d'au moins trois années en France peut se voir délivrer une carte de séjour temporaire portant la mention « travailleur temporaire » ou « salarié » d'une durée d'un an.</p><p>Les périodes de séjour et l'activité professionnelle salariée exercée sous couvert des documents de séjour mentionnés aux articles L. 421-34, L. 422-1 et L. 521-7 ne sont pas prises en compte pour l'obtention d'une carte de séjour temporaire portant la mention « travailleur temporaire » ou « salarié » mentionnée au premier alinéa du présent article.</p><p>Dans l'exercice de sa faculté d'appréciation, l'autorité compétente prend en compte, outre la réalité et la nature des activités professionnelles de l'étranger, son insertion sociale et familiale, son respect de l'ordre public, son intégration à la société française et son adhésion aux modes de vie et aux valeurs de celle-ci ainsi qu'aux principes de la République mentionnés à l'article L. 412-7.</p><p>L'étranger ne peut se voir délivrer la carte de séjour temporaire sur le fondement du premier alinéa du présent article s'il a fait l'objet d'une condamnation, d'une incapacité ou d'une déchéance mentionnée au bulletin n° 2 du casier judiciaire.</p><p>Par dérogation à l'article L. 421-1, lorsque la réalité de l'activité de l'étranger a été vérifiée conformément au troisième alinéa de l'article L. 5221-5 du code du travail, la délivrance de cette carte entraîne celle de l'autorisation de travail mentionnée à l'article L. 5221-2 du même code, matérialisée par un document sécurisé.</p><p>La condition prévue à l'article L. 412-1 du présent code n'est pas opposable.</p><p>Conformément au III de l'article 27 de la loi n° 2024-42 du 26 janvier 2024, ces dispositions sont applicables jusqu'au 31 décembre 2026.</p><span class="src">Article L. 435-4 du CESEDA. Légifrance, texte intégral.</span></div>
+        <button class="btn copy" data-target="t4" type="button">Copier le texte</button>
+        <h4>À retenir</h4>
+        <ul>
+          <li><b>4 conditions cumulatives :</b> 12 mois de salariat sur les 24 derniers mois dans un métier listé · un emploi actuel dans ce métier · 3 ans de résidence ininterrompue · bulletin n° 2 du casier vierge.</li>
+          <li><b>Ne comptent pas :</b> le séjour et le travail sous carte « travailleur saisonnier » (<span class="ref">L. 421-34</span>), « étudiant » (<span class="ref">L. 422-1</span>) ou attestation de demande d'asile (<span class="ref">L. 521-7</span>). Le travail indépendant ne compte pas non plus.</li>
+          <li><b>Liste régionale :</b> arrêté du 21 mai 2025. Pour Marseille, vérifier le métier dans la liste Provence-Alpes-Côte d'Azur.</li>
+          <li>Le salarié dépose seul, sans son employeur, avec le formulaire « Demande d'autorisation de travail au titre des métiers en tension ». Dossier complet = récépissé qui autorise à travailler.</li>
+          <li>Si la liste change pendant l'instruction, la version la plus favorable s'applique (instruction du 5 février 2024).</li>
+          <li>Remplir les conditions ne crée pas de droit : « sans que les conditions […] soient opposables à l'autorité administrative ».</li>
+        </ul>
+        <div class="callout c-warn"><b class="t">Fin du dispositif</b><span>Aucune prolongation votée au 14/10/2026. Le ministère de l'Intérieur a annoncé en juin 2026 vouloir « améliorer l'efficacité » du dispositif. Une demande déposée avant le 31/12/2026 reste en principe examinée sur ce fondement, mais déposer tôt évite tout risque. <span class="pill p-warn">À confirmer le jour du dépôt</span></span></div>
+      </div>
+    </details>
+  </div>
+
+  <div class="section" id="aes-lies">
+    <h3>Textes liés indispensables</h3>
+    <div class="tablebox"><table>
+      <thead><tr><th>Article</th><th>Ce qu'il dit</th><th>Pourquoi c'est utile</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ref">L. 423-23</span></td><td>Carte « vie privée et familiale » d'un an pour l'étranger dont les liens personnels et familiaux en France sont tels qu'un refus porterait une atteinte disproportionnée à sa vie privée et familiale. Liens appréciés selon intensité, ancienneté, stabilité, conditions d'existence, insertion, liens restés au pays, connaissance des valeurs de la République.</td><td>Titre <b>de plein droit</b>, contrôle complet du juge (article 8 de la <abbr title="Convention européenne des droits de l'homme">CEDH</abbr>). Souvent meilleur que l'AES.</td></tr>
+        <tr><td><span class="ref">L. 423-22</span></td><td>Jeune confié à l'ASE au plus tard à 16 ans.</td><td>Titre de plein droit, sans droit de visa de régularisation.</td></tr>
+        <tr><td><span class="ref">L. 432-13</span></td><td>Commission du titre de séjour saisie : refus d'une carte de plein droit (dont <span class="ref">L. 423-23</span>) à un étranger qui remplit les conditions ; et « dans le cas prévu à l'article L. 435-1 » (4°).</td><td>Vice de procédure si oublié.</td></tr>
+        <tr><td><span class="ref">L. 432-14</span></td><td>Composition : un maire (ou suppléant) et deux personnalités qualifiées désignées par le préfet.</td><td>—</td></tr>
+        <tr><td><span class="ref">L. 432-15</span></td><td>Convocation écrite au moins 15 jours avant ; réunion dans les 3 mois de la saisine ; assistance d'un conseil et d'un interprète ; aide juridictionnelle possible.</td><td>Vérifier le respect de ces garanties.</td></tr>
+        <tr><td><span class="ref">L. 412-1</span></td><td>Visa de long séjour exigé en principe.</td><td>Écarté par L. 435-1 à L. 435-4 et L. 423-23.</td></tr>
+        <tr><td><span class="ref">L. 412-5</span> · <span class="ref">L. 412-6</span></td><td>Menace à l'ordre public = obstacle à la carte. Aucun titre en cas de polygamie en France.</td><td>Conditions générales de tout titre.</td></tr>
+        <tr><td><span class="ref">L. 412-7</span> à <span class="ref">L. 412-10</span></td><td>Contrat d'engagement à respecter les principes de la République.</td><td>À signer et joindre.</td></tr>
+        <tr><td><span class="ref">L. 432-1-1</span></td><td>Refus possible, par décision motivée, si l'étranger n'a pas exécuté une OQTF, ou a commis certains délits (faux, trafic, etc.).</td><td>Risque majeur si OQTF antérieure.</td></tr>
+        <tr><td><span class="ref">L. 731-1</span> 1°</td><td>Assignation à résidence possible sur une OQTF prise moins de 3 ans auparavant.</td><td>Une OQTF reste exécutable 3 ans.</td></tr>
+        <tr><td><span class="ref">L. 433-1-1</span></td><td>Pas plus de 3 renouvellements consécutifs d'une carte temporaire de même mention (sauf personnes dispensées de contrat d'intégration).</td><td>Anticiper la carte pluriannuelle.</td></tr>
+        <tr><td><span class="ref">L. 431-2</span></td><td>Le demandeur d'asile est invité à demander tout autre titre dans un délai fixé par décret ; après ce délai, il ne peut plus, sauf circonstances nouvelles.</td><td>Client ancien demandeur d'asile : vérifier ce délai.</td></tr>
+        <tr><td><span class="ref">L. 436-1</span> · <span class="ref">L. 436-4</span></td><td>Taxe de première délivrance 300 € ; droit de visa de régularisation 300 € dont 100 € non remboursables au dépôt (loi de finances n° 2026-103, depuis le 1er mai 2026).</td><td>Coût à annoncer au client.</td></tr>
+        <tr><td><span class="ref">R. 435-1</span> · <span class="ref">R. 435-2</span></td><td>Pièces justificatives fixées par arrêté (annexe 10 du CESEDA) ; choix de la mention pour L. 435-2.</td><td>Liste des pièces.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="section" id="aes-circ">
+    <h3>Circulaires et instructions</h3>
+    <div class="callout c-info"><b class="t">Règle clé</b><span>Une circulaire guide le préfet mais ne crée aucun droit : le client ne peut pas l'invoquer devant le juge (CE, Section, 4 févr. 2015, n° 383267 ; CE, avis, 14 oct. 2022, n° 462784). À l'inverse, le préfet ne peut pas rejeter un dossier sur les seuls critères d'une circulaire.</span></div>
+    <div class="tablebox"><table>
+      <thead><tr><th>Texte</th><th>Statut</th><th>Contenu utile</th></tr></thead>
+      <tbody>
+        <tr><td>Circulaire du 23 janvier 2025, NOR INTK2435521J (« Retailleau »)</td><td><span class="pill p-ok">En vigueur</span></td><td>AES = voie exceptionnelle ; 7 ans de présence = indice d'intégration (3 ans pour L. 435-4) ; maîtrise du français prouvée par diplôme, certification ou tout autre moyen ; contrat d'engagement républicain ; pas de menace à l'ordre public ni de polygamie ; vigilance sur les OQTF non exécutées (éléments nouveaux exigés) ; refus systématiquement assorti d'une OQTF ; travail recentré sur L. 435-4.</td></tr>
+        <tr><td>CE, 21 nov. 2025, n° 502722</td><td><span class="pill p-info">Décision</span></td><td>Recours contre la circulaire rejeté. Mais le ministre « n'a pas entendu ajouter des critères » à <span class="ref">L. 423-23</span>. Argument utile si un préfet exige des « circonstances exceptionnelles » pour une demande L. 423-23.</td></tr>
+        <tr><td>Instruction du 5 février 2024</td><td><span class="pill p-ok">En vigueur</span></td><td>Mode d'emploi de L. 435-4 : preuves des 12 mois, 3 ans de résidence, liste la plus favorable.</td></tr>
+        <tr><td>Circulaire du 29 janvier 2016, annexe 10</td><td><span class="pill p-ok">En vigueur</span></td><td>Mineurs isolés : liens familiaux ténus non opposés ; carte « étudiant » possible.</td></tr>
+        <tr><td>Circulaire du 28 novembre 2012 (« Valls »)</td><td><span class="pill p-risk">Abrogée</span></td><td>Ne plus la citer. Ses critères (5 ans, enfants scolarisés 3 ans, 8 mois de travail) ne s'appliquent plus.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout c-warn"><b class="t">Actualité 2026</b><span>Le ministre de l'Intérieur, Laurent Nuñez, a évoqué un assouplissement et une nouvelle circulaire est annoncée. Au 14/10/2026, la circulaire du 23 janvier 2025 reste la référence. <span class="pill p-warn">À vérifier sur Légifrance, rubrique Circulaires</span></span></div>
+  </div>
+
+  <div class="section" id="aes-nat">
+    <h3>Algériens, Tunisiens, Marocains</h3>
+    <p class="lead">Fréquents à Marseille. Leur accord bilatéral passe avant le CESEDA sur les points qu'il règle.</p>
+    <div class="cards">
+      <div class="card"><span class="eyebrow">Algérie · accord du 27/12/1968</span><h3>L. 435-1 non invocable</h3><p class="small">L'accord régit tout le séjour. Le préfet garde un pouvoir général de régularisation, contrôlé pour erreur manifeste (CE, avis, 22 mars 2010, n° 333679).</p><p class="small"><b>Atout :</b> certificat de résidence de plein droit après plus de 10 ans de résidence prouvée (15 ans si une partie comme étudiant), art. 6 1°. Les périodes sous interdiction de retour ne comptent pas (CE, 30 juill. 2024, n° 473675).</p></div>
+      <div class="card"><span class="eyebrow">Tunisie · accord du 17/03/1988</span><h3>Volet « salarié » exclu</h3><p class="small">L'accord règle le séjour salarié (art. 3) : L. 435-1 ne peut pas fonder une carte « salarié ». Le préfet peut régulariser par son pouvoir discrétionnaire (CE, avis, 2 mars 2012, n° 355208). La voie « vie privée et familiale » de L. 435-1 reste ouverte.</p><p class="small">Voir aussi l'accord-cadre du 28 avril 2008 (métiers ouverts).</p></div>
+      <div class="card"><span class="eyebrow">Maroc · accord du 09/10/1987</span><h3>Volet « salarié » exclu</h3><p class="small">Même logique : l'article 3 de l'accord règle le séjour salarié, donc L. 435-1 n'est pas invocable pour une carte « salarié ». Pouvoir discrétionnaire du préfet maintenu (CE, 31 janv. 2014, n° 367306).</p></div>
+    </div>
+    <p class="muted small">Autres pays : vérifier les accords de gestion concertée des flux migratoires (Sénégal, Gabon, Congo, Bénin, Cap-Vert, Burkina Faso, Cameroun, Maurice), qui ouvrent parfois des listes de métiers plus larges.</p>
+  </div>
+
+  <div class="section" id="aes-proc">
+    <h3>Procédure, coût et recours</h3>
+    <ol class="steps">
+      <li><span class="dot">1</span><div class="txt"><b>Préparer</b><span class="muted">Fondement choisi, preuves de présence année par année, pièces de l'annexe 10, contrat d'engagement républicain signé, preuves de français.</span></div></li>
+      <li><span class="dot">2</span><div class="txt"><b>Déposer à la préfecture des Bouches-du-Rhône</b><span class="muted">Préfecture du lieu de résidence, selon la procédure qu'elle publie (rendez-vous ou formulaire en ligne). Payer 100 € au dépôt (non remboursables).</span></div></li>
+      <li><span class="dot">3</span><div class="txt"><b>Instruction</b><span class="muted">Si plus de 10 ans prouvés et refus envisagé : commission du titre de séjour (convocation 15 jours avant). Silence de 4 mois = refus implicite.</span></div></li>
+      <li><span class="dot">4a</span><div class="txt"><b>Accord</b><span class="muted">Carte temporaire d'un an. Payer 350 € (taxe 300 € + timbre 50 €) et le solde du droit de visa (200 €).</span></div></li>
+      <li><span class="dot">4b</span><div class="txt"><b>Refus</b><span class="muted">Presque toujours avec une OQTF. Délais de recours ci-dessous, à ne jamais dépasser.</span></div></li>
+    </ol>
+    <div class="cards">
+      <div class="card"><span class="eyebrow">Coût total depuis le 01/05/2026</span><div class="big">650 €</div><p class="small muted">300 € de visa de régularisation (dont 100 € au dépôt) + 300 € de taxe + 50 € de timbre. Exonérés du visa de régularisation : réfugiés, apatrides, protection subsidiaire, jeunes de <span class="ref">L. 423-22</span>, entre autres (<span class="ref">L. 436-4</span>).</p></div>
+      <div class="card"><span class="eyebrow">Silence de la préfecture</span><div class="big">4 mois</div><p class="small muted">= refus implicite. Ensuite 2 mois pour un recours gracieux, hiérarchique et/ou au tribunal administratif.</p></div>
+    </div>
+    <h3>Délais pour contester un refus avec OQTF <span class="pill p-ok">Vérifié</span></h3>
+    <div class="tablebox"><table>
+      <thead><tr><th>Situation du client</th><th>Délai de recours</th><th>Le tribunal juge en</th><th>Texte</th></tr></thead>
+      <tbody>
+        <tr><td>Cas général (libre)</td><td><b>1 mois</b></td><td>6 mois</td><td><span class="ref">L. 614-1</span>, <span class="ref">L. 911-1</span>, <span class="ref">R. 911-1</span></td></tr>
+        <tr><td>Assigné à résidence</td><td><b>7 jours</b></td><td>15 jours</td><td><span class="ref">L. 614-2</span>, <span class="ref">L. 921-1</span></td></tr>
+        <tr><td>En rétention</td><td><b>48 heures</b></td><td>quelques jours</td><td><span class="ref">L. 614-2</span>, <span class="ref">L. 921-2</span></td></tr>
+      </tbody>
+    </table></div>
+    <ul class="small" style="padding-left:1.2rem;display:grid;gap:4px">
+      <li>Un recours gracieux ou hiérarchique <b>ne prolonge pas</b> le délai contre une OQTF (<span class="ref">R. 911-1</span>).</li>
+      <li>Le recours au tribunal est suspensif ; l'appel (1 mois) ne l'est pas.</li>
+      <li>Aide juridictionnelle possible ; avocat non obligatoire devant le tribunal administratif.</li>
+    </ul>
+  </div>
+
+  <div class="section" id="aes-jur">
+    <h3>Jurisprudence clé</h3>
+    <div class="tablebox"><table>
+      <thead><tr><th>Décision</th><th>Ce qu'elle dit</th><th>À utiliser pour</th></tr></thead>
+      <tbody>
+        <tr><td>CE, Section, 4 févr. 2015, n° 383267</td><td>Circulaire = orientations générales, non invocables.</td><td>Valeur des circulaires</td></tr>
+        <tr><td>CE, avis, 14 oct. 2022, n° 462784</td><td>Même solution malgré l'article L. 312-3 du CRPA.</td><td>Idem</td></tr>
+        <tr><td>CE, 21 nov. 2025, n° 502722</td><td>Circulaire Retailleau validée, sans critère ajouté à L. 423-23.</td><td>Demandes L. 423-23</td></tr>
+        <tr><td>CE, avis, 22 mars 2010, n° 333679</td><td>Algériens : L. 435-1 non invocable, pouvoir général du préfet.</td><td>Clients algériens</td></tr>
+        <tr><td>CE, avis, 2 mars 2012, n° 355208</td><td>Tunisiens : pas de L. 435-1 pour une carte « salarié ».</td><td>Clients tunisiens</td></tr>
+        <tr><td>CE, 31 janv. 2014, n° 367306</td><td>Marocains : même solution.</td><td>Clients marocains</td></tr>
+        <tr><td>CE, 11 déc. 2019, n° 424336</td><td>Méthode d'examen de L. 435-3.</td><td>Jeunes ASE</td></tr>
+        <tr><td>CE, 24 mars 2023, n° 453493</td><td>Refus disproportionné : couple présent depuis plus de 10 ans, enfants nés et scolarisés en France.</td><td>Familles, article 8 CEDH</td></tr>
+        <tr><td>CE, 30 juill. 2024, n° 473675</td><td>Algérien : périodes sous interdiction de retour exclues du calcul des 10 ans.</td><td>Calcul de présence</td></tr>
+        <tr><td>CAA Marseille, 21 juin 2021, n° 20MA04198</td><td>Refus annulé : commission non saisie malgré plus de 10 ans.</td><td>Vice de procédure</td></tr>
+        <tr><td>CAA Bordeaux, 26 oct. 2023, n° 23BX00859</td><td>Erreur manifeste sur L. 435-2.</td><td>OACAS</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="section" id="aes-check">
+    <h3>Avant de déposer : 8 vérifications</h3>
+    <div class="progress"><span data-count="aes">0 / 8</span><div class="bar"><i data-bar="aes"></i></div></div>
+    <ul class="checklist" data-list="aes">
+      <li><label><input type="checkbox" id="aes-c1"><span><b>Nationalité :</b> Algérie, Tunisie, Maroc ou accord de gestion concertée ? Le fondement change.</span></label></li>
+      <li><label><input type="checkbox" id="aes-c2"><span><b>OQTF passée :</b> moins de 3 ans sans élément nouveau = dépôt très risqué. En cas de doute, demander l'accès au dossier en préfecture (articles L. 311-1 et suivants du CRPA).</span></label></li>
+      <li><label><input type="checkbox" id="aes-c3"><span><b>Casier :</b> bulletin n° 2 vierge obligatoire pour L. 435-4 ; ailleurs, mesurer ancienneté et gravité.</span></label></li>
+      <li><label><input type="checkbox" id="aes-c4"><span><b>Meilleur fondement :</b> tester L. 423-23, L. 423-22 ou un autre titre de plein droit avant l'AES.</span></label></li>
+      <li><label><input type="checkbox" id="aes-c5"><span><b>Preuves de présence année par année :</b> documents administratifs (forts), bulletins de salaire et relevés bancaires (réels), attestations de proches (faibles).</span></label></li>
+      <li><label><input type="checkbox" id="aes-c6"><span><b>Intégration :</b> diplôme ou certification de français, contrat d'engagement républicain signé, impôts déclarés, bénévolat, scolarité des enfants.</span></label></li>
+      <li><label><input type="checkbox" id="aes-c7"><span><b>Métier en tension :</b> métier présent dans la liste PACA de l'arrêté du 21 mai 2025, dépôt avant le 31/12/2026.</span></label></li>
+      <li><label><input type="checkbox" id="aes-c8"><span><b>Plus de 10 ans :</b> rappeler par écrit l'obligation de saisir la commission du titre de séjour.</span></label></li>
+    </ul>
+  </div>
+
+  <div class="section" id="aes-gloss">
+    <h3>Glossaire</h3>
+    <div class="glossary">
+      <div><b>AES</b> · Admission exceptionnelle au séjour (« régularisation »).</div>
+      <div><b>CESEDA</b> · Code de l'entrée et du séjour des étrangers et du droit d'asile.</div>
+      <div><b>CST</b> · Carte de séjour temporaire (1 an).</div>
+      <div><b>VPF</b> · Mention « vie privée et familiale ».</div>
+      <div><b>OQTF</b> · Obligation de quitter le territoire français.</div>
+      <div><b>IRTF</b> · Interdiction de retour sur le territoire français.</div>
+      <div><b>ASE</b> · Aide sociale à l'enfance.</div>
+      <div><b>OACAS</b> · Organisme d'accueil communautaire et d'activités solidaires (ex. Emmaüs).</div>
+      <div><b>CERPR</b> · Contrat d'engagement à respecter les principes de la République.</div>
+      <div><b>CEDH</b> · Convention européenne des droits de l'homme (article 8 : vie privée et familiale).</div>
+      <div><b>CRPA</b> · Code des relations entre le public et l'administration.</div>
+      <div><b>Erreur manifeste</b> · Erreur d'appréciation grossière : seul contrôle du juge sur une décision discrétionnaire.</div>
+    </div>
+  </div>
+
+  <div class="section" id="aes-src">
+    <h3>Sources</h3>
+    <ul class="sources">
+      <li><a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070158/LEGISCTA000042772028/" target="_blank" rel="noopener">Légifrance · CESEDA L. 435-1 à L. 435-4</a></li>
+      <li><a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070158/LEGISCTA000042771752/" target="_blank" rel="noopener">Légifrance · L. 423-23</a></li>
+      <li><a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070158/LEGISCTA000042771964/" target="_blank" rel="noopener">Légifrance · Commission du titre de séjour</a></li>
+      <li><a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070158/LEGISCTA000042772036/" target="_blank" rel="noopener">Légifrance · Taxes (L. 436-1 et s.)</a></li>
+      <li><a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070158/LEGISCTA000042772816/" target="_blank" rel="noopener">Légifrance · Recours contre l'OQTF</a></li>
+      <li><a href="https://www.legifrance.gouv.fr/circulaire/id/45584" target="_blank" rel="noopener">Légifrance · Circulaire du 23 janvier 2025</a></li>
+      <li><a href="https://www.legifrance.gouv.fr/circulaire/id/45520" target="_blank" rel="noopener">Légifrance · Instruction du 5 février 2024</a></li>
+      <li><a href="https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000051643488" target="_blank" rel="noopener">Légifrance · Arrêté du 21 mai 2025 (métiers en tension)</a></li>
+      <li><a href="https://www.legifrance.gouv.fr/ceta/id/CETATEXT000052821511" target="_blank" rel="noopener">CE, 21 nov. 2025, n° 502722</a></li>
+      <li><a href="https://www.conseil-etat.fr/fr/arianeweb/CE/decision/2012-03-02/355208" target="_blank" rel="noopener">CE, avis, 2 mars 2012, n° 355208</a></li>
+      <li><a href="https://www.conseil-etat.fr/fr/arianeweb/CE/decision/2014-01-31/367306" target="_blank" rel="noopener">CE, 31 janv. 2014, n° 367306</a></li>
+      <li><a href="https://www.conseil-etat.fr/fr/arianeweb/CE/decision/2022-10-14/462784" target="_blank" rel="noopener">CE, avis, 14 oct. 2022, n° 462784</a></li>
+      <li><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F16053" target="_blank" rel="noopener">Service-Public · Régularisation par le travail</a></li>
+      <li><a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F2209" target="_blank" rel="noopener">Service-Public · Carte vie privée et familiale</a></li>
+      <li><a href="https://www.service-public.gouv.fr/particuliers/actualites/A18881" target="_blank" rel="noopener">Service-Public · Tarifs au 1er mai 2026</a></li>
+      <li><a href="https://www.gisti.org/article7476" target="_blank" rel="noopener">Gisti · L'AES après la circulaire Retailleau</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================================================== 2 NETTOYAGE -->
+<section class="panel" id="p-nettoyage" data-panel="nettoyage" hidden>
+  <div class="section">
+    <span class="eyebrow">Dossier 2 · Démarches locales</span>
+    <h2>Organiser une campagne de nettoyage à Marseille</h2>
+    <div class="toc-in"><a href="#n-30s">En 30 s</a><a href="#n-qui">Qui contacter</a><a href="#n-frise">Calendrier</a><a href="#n-orga">Selon l'organisateur</a><a href="#n-assur">Assurance</a><a href="#n-secu">Sécurité</a><a href="#n-mineurs">Mineurs</a><a href="#n-dechets">Déchets</a><a href="#n-modele">Modèle de courrier</a><a href="#n-marche">Si la mairie paie</a><a href="#n-check">Checklist</a><a href="#n-src">Sources</a></div>
+    <div class="assume"><b>Hypothèses de cette recherche</b><span>Marseille · rues, parcs ou quartiers (pas la plage) · organisateur pas encore choisi (les 4 cas sont traités) · présence de mineurs possible. Rawand peut corriger ces points.</span></div>
+  </div>
+
+  <div class="section" id="n-30s">
+    <div class="tldr">
+      <span class="eyebrow">L'essentiel en 30 secondes</span>
+      <ol>
+        <li><span><b>Ville de Marseille :</b> demande d'événement sur l'espace public en ligne, <b>12 semaines avant</b>.</span></li>
+        <li><span><b>Préfecture de police des Bouches-du-Rhône :</b> déclaration du rassemblement sur la voie publique, entre <b>15 et 3 jours francs avant</b> (Marseille relève de la police d'État). <span class="pill p-ok">Vérifié</span></span></li>
+        <li><span><b>Métropole Aix-Marseille-Provence :</b> c'est elle qui gère la propreté et les déchets. Lui demander l'enlèvement des sacs ou prévoir la déchetterie.</span></li>
+        <li><span><b>Assurance responsabilité civile</b> de l'organisateur, gants anti-coupures pour tous, consignes de sécurité.</span></li>
+        <li><span><b>Mineurs :</b> autorisation parentale écrite et un adulte responsable.</span></li>
+      </ol>
+      <div class="callout c-risk"><b class="t">Attention, actualité d'octobre 2026</b><span>Marsactu (5 octobre 2026) rapporte que des associations n'ont pas obtenu l'autorisation de la Ville pour leur ramassage du World Cleanup Day et ont dû annuler. Conclusion : déposer tôt (12 semaines) et obtenir une <b>réponse écrite</b> avant d'annoncer l'événement.</span></div>
+    </div>
+  </div>
+
+  <div class="section" id="n-qui">
+    <h3>Qui fait quoi à Marseille</h3>
+    <div class="tablebox"><table>
+      <thead><tr><th>Autorité</th><th>Son rôle pour vous</th><th>Démarche</th><th>Quand</th></tr></thead>
+      <tbody>
+        <tr><td>Ville de Marseille</td><td>Occupation de l'espace public, événements, parcs et jardins</td><td>« Demandes dématérialisées d'évènements et tournages » sur mes-demarches.marseille.fr</td><td><b>12 semaines avant</b></td></tr>
+        <tr><td>Préfecture de police des Bouches-du-Rhône</td><td>Déclaration préalable du rassemblement sur la voie publique (<span class="ref">L. 211-1</span> et <span class="ref">L. 211-2</span> du code de la sécurité intérieure)</td><td>Formulaire de déclaration d'événement de la préfecture ; récépissé immédiat</td><td>Entre <b>15 et 3 jours francs</b> avant</td></tr>
+        <tr><td>Métropole Aix-Marseille-Provence</td><td>Propreté, collecte des déchets, déchetteries</td><td>ampmetropole.fr (démarches propreté-déchets) ; dechets.ampmetropole.fr</td><td>Dès la réponse de la Ville</td></tr>
+        <tr><td>Mairie de secteur (1 à 8)</td><td>Appui de proximité. En 2022, la Ville distribuait gants et sacs gratuits dans 18 points (mairies de secteur, piscines, bibliothèques).</td><td>Contacter la mairie du secteur concerné</td><td>Avec la demande Ville</td></tr>
+        <tr><td>Propriétaire privé</td><td>Terrain privé, cour de copropriété, friche</td><td>Accord écrit du propriétaire</td><td>Avant toute annonce</td></tr>
+        <tr><td>Parc national des Calanques</td><td>Si le site est dans le parc</td><td>Autorisation du parc (une décision a été délivrée en 2025 pour « Clean my Calanques »)</td><td>Plusieurs semaines avant</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout c-info"><b class="t">Ce que dit la loi sur la déclaration</b><span>« Sont soumis à l'obligation d'une déclaration préalable tous cortèges, défilés et rassemblements de personnes, et, d'une façon générale, toutes manifestations sur la voie publique » (<span class="ref">L. 211-1</span> CSI). Dans les communes à police d'État comme Marseille, la déclaration est faite au représentant de l'État (<span class="ref">L. 211-2</span>). Elle indique les noms et domiciles des organisateurs, le but, le lieu, la date, l'heure et l'itinéraire, et est signée par au moins un organisateur. Sans déclaration : jusqu'à 6 mois de prison et 7 500 € d'amende (Service-Public).</span></div>
+  </div>
+
+  <div class="section" id="n-frise">
+    <h3>Calendrier à suivre</h3>
+    <ol class="steps">
+      <li><span class="dot">J-90</span><div class="txt"><b>Choisir lieu, date, durée (environ 3 h)</b><span class="muted">Repérer le site. Vérifier s'il est public, privé ou protégé. Choisir l'organisateur (voir plus bas).</span></div></li>
+      <li><span class="dot">J-84</span><div class="txt"><b>Demande en ligne à la Ville de Marseille</b><span class="muted">12 semaines avant. Joindre attestation d'assurance, plan du site, nombre de participants, besoins (sacs, bennes, barrières).</span></div></li>
+      <li><span class="dot">J-60</span><div class="txt"><b>Métropole : organiser l'enlèvement des déchets</b><span class="muted">Point de dépôt des sacs, jour et heure d'enlèvement, ou déchetterie la plus proche.</span></div></li>
+      <li><span class="dot">J-30</span><div class="txt"><b>Communication et inscriptions</b><span class="muted">Seulement après la réponse écrite de la Ville. Recueillir autorisations parentales et droit à l'image.</span></div></li>
+      <li><span class="dot">J-15</span><div class="txt"><b>Déclaration à la préfecture de police</b><span class="muted">Entre 15 et 3 jours francs avant. Garder le récépissé.</span></div></li>
+      <li><span class="dot">J</span><div class="txt"><b>Le jour même</b><span class="muted">Accueil, comptage, consignes de sécurité (20 min), ramassage, tri, pesée, photo, remerciements.</span></div></li>
+      <li><span class="dot">J+7</span><div class="txt"><b>Bilan</b><span class="muted">Quantités ramassées, nombre de participants, remerciements, éventuel communiqué de presse.</span></div></li>
+    </ol>
+  </div>
+
+  <div class="section" id="n-orga">
+    <h3>Ce qui change selon l'organisateur</h3>
+    <div class="tool">
+      <div class="q"><span>Qui organise ?</span><div class="choices" data-q="orga"><button type="button" data-v="asso">Une association</button><button type="button" data-v="ent">La société de Rawand</button><button type="button" data-v="hab">Un groupe d'habitants</button><button type="button" data-v="part">Une seule personne</button></div></div>
+      <div class="result" id="orgaResult" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="section" id="n-assur">
+    <h3>Assurance et responsabilité</h3>
+    <div class="cards">
+      <div class="card"><span class="eyebrow">Bénévole blessé</span><p class="small">Entre l'organisateur et le bénévole existe une « convention tacite d'assistance ». L'organisateur indemnise si une faute est prouvée, par exemple un manquement aux règles de sécurité (Cass. civ. 1re, 18 juin 2014, n° 13-14.843).</p></div>
+      <div class="card"><span class="eyebrow">Dommage à un tiers</span><p class="small">L'organisateur répond des fautes de ses bénévoles agissant pour lui (<span class="ref">art. 1242</span> code civil). En pratique, c'est son assureur qui paie.</p></div>
+      <div class="card"><span class="eyebrow">Ce qu'il faut</span><p class="small">Une <b>responsabilité civile</b> qui couvre cet événement précis (le demander par écrit à l'assureur), idéalement une <b>individuelle accident</b> pour les participants. La Ville et la préfecture peuvent demander l'attestation.</p></div>
+    </div>
+    <div class="callout c-ok"><b class="t">Astuce</b><span>L'association World Cleanup Day France couvre les organisateurs adhérents (5 €) pour les risques physiques, juridiques et sanitaires le jour de son événement annuel. Les non-adhérents doivent avoir leur propre assurance.</span></div>
+  </div>
+
+  <div class="section" id="n-secu">
+    <h3>Sécurité : les règles à afficher</h3>
+    <div class="tablebox"><table>
+      <thead><tr><th>Situation</th><th>Règle</th></tr></thead>
+      <tbody>
+        <tr><td>Tout le monde</td><td><span class="pill p-risk">Obligatoire</span> Gants anti-coupures (norme EN 388), chaussures fermées, gilet jaune près des routes.</td></tr>
+        <tr><td>Seringues</td><td>Ne jamais les toucher à mains nues. Pince et boîte rigide, ou signalement à la Ville.</td></tr>
+        <tr><td>Produits chimiques</td><td>Ne pas ouvrir, ne pas mélanger, déposer en déchetterie.</td></tr>
+        <tr><td>Amiante</td><td>Ne pas toucher, prévenir la mairie.</td></tr>
+        <tr><td>Armes, munitions</td><td>Ne pas toucher, appeler le 17.</td></tr>
+        <tr><td>Objets lourds</td><td>Ne pas soulever sans matériel adapté.</td></tr>
+        <tr><td>Groupe</td><td>Rester à portée de vue, équipes de 3 à 5, une trousse de secours, eau et savon ou gel.</td></tr>
+        <tr><td>Urgences</td><td>15 SAMU · 17 police · 18 pompiers · 112</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="section" id="n-mineurs">
+    <h3>Si des mineurs participent</h3>
+    <ul class="checklist" data-list="min">
+      <li><label><input type="checkbox" id="n-m1"><span>Autorisation parentale écrite, avec téléphone d'un parent.</span></label></li>
+      <li><label><input type="checkbox" id="n-m2"><span>Un adulte responsable nommé pour chaque groupe d'enfants.</span></label></li>
+      <li><label><input type="checkbox" id="n-m3"><span>Gants à leur taille ; interdiction de ramasser verre, seringues, produits inconnus.</span></label></li>
+      <li><label><input type="checkbox" id="n-m4"><span>Vérifier que l'assurance couvre les mineurs.</span></label></li>
+      <li><label><input type="checkbox" id="n-m5"><span>Accord des parents pour les photos (droit à l'image, article 9 du code civil).</span></label></li>
+    </ul>
+    <p class="muted small">Aucune loi ne fixe d'âge minimum pour un ramassage ponctuel. Ces règles sont les précautions recommandées par les guides d'organisation. <span class="pill p-warn">Recommandations</span></p>
+  </div>
+
+  <div class="section" id="n-dechets">
+    <h3>Déchets : trier, peser, évacuer</h3>
+    <div class="cards">
+      <div class="card"><span class="eyebrow">Trier en équipe</span><p class="small">Recyclables · verre · ordures résiduelles · mégots (à part) · encombrants · électronique · dangereux.</p></div>
+      <div class="card"><span class="eyebrow">Peser</span><p class="small">Peson ou pèse-personne. Sinon estimer : sac 50 à 100 L, bac 120 à 660 L, benne 10 à 20 m³.</p></div>
+      <div class="card"><span class="eyebrow">Évacuer</span><p class="small">Enlèvement convenu avec la Métropole, ou déchetterie métropolitaine (ampmetropole.fr/je-trouve-ma-decheterie). Ne jamais laisser les sacs sans accord.</p></div>
+    </div>
+  </div>
+
+  <div class="section" id="n-modele">
+    <h3>Modèle de déclaration à la préfecture de police</h3>
+    <div class="template" id="tpl-decl">Objet : Déclaration préalable d'un rassemblement sur la voie publique (articles L. 211-1 et L. 211-2 du code de la sécurité intérieure)
+
+Madame, Monsieur le Préfet de police,
+
+[Nom de l'organisateur ou de l'association], représenté(e) par [prénom, nom], domicilié(e) [adresse complète], téléphone [numéro], courriel [adresse], déclare organiser une opération citoyenne de ramassage de déchets.
+
+But : nettoyage bénévole de l'espace public et sensibilisation à la propreté.
+Lieu : [rue, parc ou quartier, arrondissement], point de rassemblement : [adresse précise].
+Date et horaires : le [date], de [heure] à [heure].
+Itinéraire : [rues parcourues, ou « sans déplacement »].
+Nombre estimé de participants : [nombre], dont [nombre] mineurs accompagnés.
+Mesures de sécurité : gants anti-coupures, gilets haute visibilité, trousse de secours, consignes données avant le départ, [nombre] responsables identifiés.
+Matériel : sacs, pinces, [autre]. Pas de sonorisation.
+Évacuation des déchets : [enlèvement convenu avec la Métropole Aix-Marseille-Provence / dépôt en déchetterie].
+Autorisation de la Ville de Marseille : [référence de la demande ou de l'accord].
+Assurance : [assureur, numéro de contrat], attestation jointe.
+
+Je vous remercie de bien vouloir me délivrer le récépissé prévu à l'article L. 211-2.
+
+Fait à Marseille, le [date]
+Signature</div>
+    <button class="btn copy" data-target="tpl-decl" type="button">Copier le modèle</button>
+  </div>
+
+  <div class="section" id="n-marche">
+    <h3>Autre lecture : si la mairie paie un prestataire de nettoyage</h3>
+    <p class="lead">Si la question vise une entreprise payée par la commune pour nettoyer, ce n'est plus un événement citoyen mais un <b>marché public</b>.</p>
+    <div class="tablebox"><table>
+      <thead><tr><th>Montant du marché</th><th>Procédure</th><th>Texte</th></tr></thead>
+      <tbody>
+        <tr><td>Services de moins de 60 000 € HT</td><td>Achat possible sans publicité ni mise en concurrence (depuis le 1er avril 2026 ; 40 000 € avant)</td><td><span class="ref">R. 2122-8</span> code de la commande publique, décret n° 2025-1386</td></tr>
+        <tr><td>Au-delà</td><td>Procédure adaptée ou formalisée, avec publicité. Répondre aux appels d'offres publiés par la Ville ou la Métropole.</td><td>Code de la commande publique</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="section" id="n-check">
+    <h3>Checklist complète</h3>
+    <div class="progress"><span data-count="net">0 / 10</span><div class="bar"><i data-bar="net"></i></div></div>
+    <ul class="checklist" data-list="net">
+      <li><label><input type="checkbox" id="n-c1"><span>Lieu choisi ; statut vérifié (public, privé, protégé).</span></label></li>
+      <li><label><input type="checkbox" id="n-c2"><span>Demande d'événement à la Ville de Marseille, 12 semaines avant.</span></label></li>
+      <li><label><input type="checkbox" id="n-c3"><span>Réponse écrite de la Ville reçue.</span></label></li>
+      <li><label><input type="checkbox" id="n-c4"><span>Accord écrit du propriétaire si terrain privé.</span></label></li>
+      <li><label><input type="checkbox" id="n-c5"><span>Attestation d'assurance couvrant l'événement.</span></label></li>
+      <li><label><input type="checkbox" id="n-c6"><span>Enlèvement des déchets convenu avec la Métropole.</span></label></li>
+      <li><label><input type="checkbox" id="n-c7"><span>Déclaration à la préfecture de police (15 à 3 jours francs avant) et récépissé.</span></label></li>
+      <li><label><input type="checkbox" id="n-c8"><span>Matériel : gants EN 388, gilets, sacs, pinces, trousse de secours, gel, pesons.</span></label></li>
+      <li><label><input type="checkbox" id="n-c9"><span>Autorisations parentales et droit à l'image signés.</span></label></li>
+      <li><label><input type="checkbox" id="n-c10"><span>Fiche de consignes de sécurité imprimée.</span></label></li>
+    </ul>
+  </div>
+
+  <div class="section" id="n-src">
+    <h3>Sources</h3>
+    <ul class="sources">
+      <li><a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000025503132/LEGISCTA000025505131/" target="_blank" rel="noopener">Légifrance · CSI L. 211-1 à L. 211-4</a></li>
+      <li><a href="https://www.service-public.gouv.fr/associations/vosdroits/F21899" target="_blank" rel="noopener">Service-Public · Manifestation sur la voie publique</a></li>
+      <li><a href="https://mes-demarches.marseille.fr/evenements-et-tournages-2/" target="_blank" rel="noopener">Ville de Marseille · Événements et tournages</a></li>
+      <li><a href="https://mes-demarches.marseille.fr/autorisation-voie-publique/" target="_blank" rel="noopener">Ville de Marseille · Autorisations sur la voie publique</a></li>
+      <li><a href="https://www.marseille.fr/environnement/developpement-durable/proprete" target="_blank" rel="noopener">Ville de Marseille · Propreté</a></li>
+      <li><a href="https://www.marseille.fr/preservation-de-l-environnement-retrouvez-les-collectes-citoyennes-de-dechets-organisees-pres-de" target="_blank" rel="noopener">Ville de Marseille · Collectes citoyennes (2022)</a></li>
+      <li><a href="https://ampmetropole.fr/nous-contacter/" target="_blank" rel="noopener">Métropole Aix-Marseille-Provence · Contact</a></li>
+      <li><a href="https://marsactu.fr/a-marseille-des-associations-empechees-dorganiser-des-operations-de-ramassage-de-dechets/" target="_blank" rel="noopener">Marsactu · Associations empêchées (5 oct. 2026)</a></li>
+      <li><a href="https://www.worldcleanupday.fr/wp-content/uploads/2025/06/2025-Guide-organiser-ramassage-de-dechets.pdf" target="_blank" rel="noopener">World Cleanup Day France · Guide 2025</a></li>
+      <li><a href="https://www.associatheque.fr/fr/guides/benevolat/fondements/responsabilite-benevoles.html" target="_blank" rel="noopener">Associathèque · Responsabilité et bénévoles</a></li>
+      <li><a href="https://www.weka.fr/actualite/passation-des-marches/article/seuil-de-dispense-de-procedure-l-echeance-du-1er-avril-2026-approche-211682/" target="_blank" rel="noopener">Weka · Seuil de 60 000 € au 1er avril 2026</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===================================================== 3 BOULANGERIE -->
+<section class="panel" id="p-boulangerie" data-panel="boulangerie" hidden>
+  <div class="section">
+    <span class="eyebrow">Dossier 3 · Création d'entreprise</span>
+    <h2>Boulangerie : papiers, Urssaf et impôts</h2>
+    <div class="toc-in"><a href="#b-30s">En 30 s</a><a href="#b-etapes">Étapes</a><a href="#b-papiers">Papiers</a><a href="#b-statut">Choisir le statut</a><a href="#b-sim">Simulateur</a><a href="#b-impots">Tous les impôts</a><a href="#b-tva">TVA</a><a href="#b-calendrier">Calendrier</a><a href="#b-salaries">Salariés</a><a href="#b-gloss">Glossaire</a><a href="#b-src">Sources</a></div>
+    <div class="assume"><b>Hypothèses de cette recherche</b><span>Boulangerie à Marseille · création (pas reprise) · statut non choisi (tous comparés) · chiffre d'affaires inconnu (le simulateur permet de tester). Chiffres 2026.</span></div>
+  </div>
+
+  <div class="section" id="b-30s">
+    <div class="tldr">
+      <span class="eyebrow">L'essentiel en 30 secondes</span>
+      <ol>
+        <li><span><b>Une seule démarche pour l'Urssaf :</b> l'inscription sur le guichet unique (formalites.entreprises.gouv.fr). L'Urssaf, les impôts et la chambre de métiers sont prévenus automatiquement.</span></li>
+        <li><span><b>Diplôme obligatoire :</b> CAP, BEP ou bac pro boulanger, ou 3 ans d'expérience, chez le patron ou une personne qui contrôle le travail. Sinon : 7 500 € d'amende.</span></li>
+        <li><span><b>Avant d'ouvrir :</b> déclaration d'hygiène (Cerfa 13984*06) à la <abbr title="Direction départementale de la protection des populations">DDPP</abbr>.</span></li>
+        <li><span><b>Charges en micro-entreprise :</b> 12,3 % du chiffre d'affaires + 0,52 % (formation et chambre de métiers). Mais la micro devient vite inadaptée : on ne déduit ni la farine ni le loyer.</span></li>
+        <li><span><b>Impôts :</b> TVA (5,5 % sur le pain, 10 % sur le snacking à manger tout de suite), impôt sur le revenu ou sur les sociétés, CFE (rien la 1re année).</span></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="section" id="b-etapes">
+    <h3>Les étapes, dans l'ordre</h3>
+    <ol class="steps">
+      <li><span class="dot">1</span><div class="txt"><b>Vérifier la qualification</b><span class="muted">CAP / BEP boulanger ou pâtissier, bac pro boulanger-pâtissier, ou 3 ans d'expérience attestés par la <abbr title="Chambre de métiers et de l'artisanat">CMA</abbr>. Diplôme étranger : attestation de reconnaissance de la CMA (100 €). Le stage de préparation à l'installation n'est plus obligatoire.</span></div></li>
+      <li><span class="dot">2</span><div class="txt"><b>Trouver le local</b><span class="muted">Bail commercial, local recevant du public (sécurité incendie et accessibilité), extraction et four sans nuisance sonore pour les voisins.</span></div></li>
+      <li><span class="dot">3</span><div class="txt"><b>Choisir le statut</b><span class="muted">Micro-entreprise, entreprise individuelle au réel, EURL/SARL ou SASU/SAS. Voir le comparatif.</span></div></li>
+      <li><span class="dot">4</span><div class="txt"><b>S'immatriculer sur le guichet unique</b><span class="muted">Dans le mois avant le début d'activité, au plus tard 15 jours après. Code APE 10.71C. On reçoit SIREN et SIRET. Inscription au registre national des entreprises (RNE).</span></div></li>
+      <li><span class="dot">5</span><div class="txt"><b>Demander l'ACRE si éligible</b><span class="muted">Dans les 60 jours après le début d'activité, auprès de l'Urssaf. Elle n'est plus automatique.</span></div></li>
+      <li><span class="dot">6</span><div class="txt"><b>Déclarer l'hygiène</b><span class="muted">Cerfa 13984*06 à la DDPP des Bouches-du-Rhône avant l'ouverture. Mettre en place le plan de maîtrise sanitaire (HACCP).</span></div></li>
+      <li><span class="dot">7</span><div class="txt"><b>Assurances et banque</b><span class="muted">Multirisque professionnelle, responsabilité civile professionnelle, compte bancaire dédié.</span></div></li>
+      <li><span class="dot">8</span><div class="txt"><b>Ouvrir</b><span class="muted">Affichage des prix du pain, des allergènes. Jour de fermeture fixé par arrêté préfectoral : vérifier celui des Bouches-du-Rhône.</span></div></li>
+    </ol>
+  </div>
+
+  <div class="section" id="b-papiers">
+    <h3>Les papiers à préparer</h3>
+    <div class="progress"><span data-count="pap">0 / 12</span><div class="bar"><i data-bar="pap"></i></div></div>
+    <ul class="checklist" data-list="pap">
+      <li><label><input type="checkbox" id="b-p1"><span><b>Pièce d'identité</b> du dirigeant. <span class="pill p-info">Tous</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p2"><span><b>Déclaration sur l'honneur de non-condamnation</b> et attestation de filiation. <span class="pill p-info">Tous</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p3"><span><b>Diplôme</b> (CAP, BEP, bac pro) ou attestation de qualification de la CMA. <span class="pill p-info">Tous</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p4"><span><b>Justificatif du local :</b> bail commercial ou titre de propriété. <span class="pill p-info">Tous</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p5"><span><b>Titre de séjour autorisant à exercer</b> si le dirigeant est étranger hors UE. <span class="pill p-warn">Si besoin</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p6"><span><b>Statuts signés.</b> <span class="pill p-info">Société</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p7"><span><b>Attestation de dépôt du capital</b> (banque ou notaire). <span class="pill p-info">Société</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p8"><span><b>Annonce légale</b> de création. <span class="pill p-info">Société</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p9"><span><b>Nomination du dirigeant</b> si elle n'est pas dans les statuts, et déclaration des bénéficiaires effectifs. <span class="pill p-info">Société</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p10"><span><b>Cerfa 13984*06</b> (déclaration d'hygiène) à la DDPP. <span class="pill p-info">Tous</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p11"><span><b>Formulaire ACRE</b> et justificatifs, sous 60 jours. <span class="pill p-warn">Si éligible</span></span></label></li>
+      <li><label><input type="checkbox" id="b-p12"><span><b>Attestations d'assurance</b> (multirisque, responsabilité civile). <span class="pill p-info">Tous</span></span></label></li>
+    </ul>
+    <div class="callout c-warn"><b class="t">Le mot « boulangerie »</b><span>Seul celui qui pétrit, façonne et cuit lui-même le pain sur le lieu de vente peut utiliser « boulanger » ou « boulangerie » sur l'enseigne et la publicité (<span class="ref">L. 122-17</span> et <span class="ref">L. 122-18</span> code de la consommation). Un terminal de cuisson n'y a pas droit.</span></div>
+  </div>
+
+  <div class="section" id="b-statut">
+    <h3>Choisir le statut : comparatif 2026</h3>
+    <div class="tablebox"><table>
+      <thead><tr><th>Critère</th><th>Micro-entreprise</th><th>EI au réel ou EURL/SARL (gérant majoritaire)</th><th>SASU / SAS</th></tr></thead>
+      <tbody>
+        <tr><td>Plafond de chiffre d'affaires</td><td>203 100 € (vente)</td><td>Aucun</td><td>Aucun</td></tr>
+        <tr><td>Calcul des cotisations</td><td>12,3 % du chiffre d'affaires encaissé</td><td>Environ 45 % de la rémunération du dirigeant <span class="pill p-warn">Ordre de grandeur</span></td><td>Environ 80 % du salaire net du président <span class="pill p-warn">Ordre de grandeur</span></td></tr>
+        <tr><td>Rien gagné ?</td><td>Aucune cotisation</td><td>Cotisations minimales dues</td><td>Rien si pas de salaire</td></tr>
+        <tr><td>Dépenses déductibles (farine, loyer, four)</td><td><span class="pill p-risk">Non</span> abattement forfaitaire de 71 % pour l'impôt</td><td><span class="pill p-ok">Oui</span> au réel</td><td><span class="pill p-ok">Oui</span> au réel</td></tr>
+        <tr><td>Impôt sur le bénéfice</td><td>Impôt sur le revenu, ou versement libératoire de 1 % du CA (sous condition de revenu)</td><td>Impôt sur le revenu (EI) ou IS sur option ; IS pour la SARL</td><td>Impôt sur les sociétés : 15 % jusqu'à 42 500 €, puis 25 %</td></tr>
+        <tr><td>Protection sociale</td><td>Indépendant (faible si petit CA)</td><td>Indépendant</td><td>Régime général (comme un salarié, sans chômage)</td></tr>
+        <tr><td>Pour qui ?</td><td>Tester, très petite activité</td><td>Boulangerie classique, coûts maîtrisés</td><td>Projet avec associés, rémunération souple</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout c-info"><b class="t">À retenir pour une boulangerie</b><span>Une boulangerie a beaucoup de dépenses (matières premières, loyer, énergie, matériel). La micro-entreprise ne permet pas de les déduire et plafonne le chiffre d'affaires à 203 100 €. En pratique, la plupart des boulangeries choisissent l'EI au réel, l'EURL ou la SASU. Le choix final se fait avec un expert-comptable et le simulateur officiel de l'Urssaf.</span></div>
+  </div>
+
+  <div class="section" id="b-sim">
+    <h3>Simulateur</h3>
+    <div class="sim">
+      <span class="eyebrow">A · Micro-entreprise : ce que vous payez à l'Urssaf</span>
+      <div class="fields">
+        <div class="field"><label for="ca">Chiffre d'affaires annuel encaissé (€)</label><input type="number" id="ca" min="0" step="1000" value="60000"></div>
+        <div class="field"><label for="dep">Dépenses annuelles (farine, loyer, énergie…) (€)</label><input type="number" id="dep" min="0" step="1000" value="30000"></div>
+      </div>
+      <div class="fields">
+        <label class="toggle"><input type="checkbox" id="acre"> ACRE (cotisations réduites de 25 % la 1re année)</label>
+        <label class="toggle"><input type="checkbox" id="vl"> Versement libératoire de l'impôt (1 %)</label>
+      </div>
+      <div class="stack" aria-hidden="true"><i id="s-cot" style="background:var(--risk)"></i><i id="s-imp" style="background:var(--warn)"></i><i id="s-dep" style="background:var(--muted)"></i><i id="s-rest" style="background:var(--ok)"></i></div>
+      <div class="legend"><span><b style="background:var(--risk)"></b>Urssaf</span><span><b style="background:var(--warn)"></b>Impôt libératoire</span><span><b style="background:var(--muted)"></b>Dépenses</span><span><b style="background:var(--ok)"></b>Reste pour vivre</span></div>
+      <div class="out" id="microOut" aria-live="polite"></div>
+      <div id="microWarn"></div>
+    </div>
+
+    <div class="sim">
+      <span class="eyebrow">B · Société à l'IS : impôt sur le bénéfice</span>
+      <div class="fields"><div class="field"><label for="benef">Bénéfice annuel de la société (€)</label><input type="number" id="benef" min="0" step="1000" value="50000"></div></div>
+      <div class="out" id="isOut" aria-live="polite"></div>
+      <p class="muted small">Taux réduit de 15 % si chiffre d'affaires ≤ 10 M€ et capital entièrement libéré, détenu à 75 % au moins par des personnes physiques.</p>
+    </div>
+
+    <div class="sim">
+      <span class="eyebrow">C · TVA sur un prix de vente</span>
+      <div class="fields">
+        <div class="field"><label for="ttc">Prix affiché TTC (€)</label><input type="number" id="ttc" min="0" step="0.05" value="1.30"></div>
+        <div class="field"><label for="taux">Produit</label><select id="taux"><option value="5.5">Pain, viennoiserie, pâtisserie à emporter (5,5 %)</option><option value="10">Sandwich, boisson en gobelet, consommé sur place (10 %)</option><option value="20">Boisson alcoolisée (20 %)</option></select></div>
+      </div>
+      <div class="out" id="tvaOut" aria-live="polite"></div>
+    </div>
+    <p class="muted small">Le simulateur A applique les taux officiels 2026 de la micro-entreprise (12,3 % + 0,3 % de formation + 0,22 % de chambre de métiers). Il ne compte ni la CFE ni l'impôt sur le revenu classique. Pour les autres statuts, utiliser le simulateur officiel <a href="https://mon-entreprise.urssaf.fr" target="_blank" rel="noopener">mon-entreprise.urssaf.fr</a>.</p>
+  </div>
+
+  <div class="section" id="b-impots">
+    <h3>Tous les impôts et cotisations</h3>
+    <div class="tablebox"><table>
+      <thead><tr><th>Quoi</th><th>Montant 2026</th><th>Qui paie</th><th>Statut</th></tr></thead>
+      <tbody>
+        <tr><td>Cotisations sociales micro</td><td class="num">12,3 % du CA</td><td>Micro</td><td><span class="pill p-ok">Vérifié</span></td></tr>
+        <tr><td>Formation professionnelle (CFP) artisan</td><td class="num">0,3 % du CA</td><td>Micro</td><td><span class="pill p-ok">Vérifié</span></td></tr>
+        <tr><td>Taxe chambre de métiers (vente)</td><td class="num">0,22 % du CA</td><td>Micro</td><td><span class="pill p-ok">Vérifié</span></td></tr>
+        <tr><td>Versement libératoire (option)</td><td class="num">1 % du CA</td><td>Micro, sous condition de revenu</td><td><span class="pill p-ok">Vérifié</span></td></tr>
+        <tr><td>Cotisations indépendant</td><td class="num">≈ 45 % du revenu</td><td>EI réel, gérant majoritaire</td><td><span class="pill p-warn">Ordre de grandeur</span></td></tr>
+        <tr><td>Charges du président salarié</td><td class="num">≈ 80 % du net</td><td>SASU / SAS</td><td><span class="pill p-warn">Ordre de grandeur</span></td></tr>
+        <tr><td>Impôt sur les sociétés</td><td class="num">15 % puis 25 %</td><td>SARL, SAS, ou EI sur option</td><td><span class="pill p-ok">Vérifié</span></td></tr>
+        <tr><td>Impôt sur le revenu</td><td class="num">Barème progressif</td><td>Micro (après abattement 71 %), EI</td><td><span class="pill p-ok">Vérifié</span></td></tr>
+        <tr><td>TVA</td><td class="num">5,5 % / 10 % / 20 %</td><td>Tous, sauf franchise (CA ventes &lt; 85 000 €)</td><td><span class="pill p-ok">Vérifié</span></td></tr>
+        <tr><td>CFE</td><td class="num">Selon la commune</td><td>Tous, à partir de la 2e année (base réduite de moitié la 2e année)</td><td><span class="pill p-warn">Montant à demander au SIE</span></td></tr>
+        <tr><td>ACRE (aide)</td><td class="num">−25 %</td><td>Créateurs éligibles, 1re année</td><td><span class="pill p-ok">Vérifié</span></td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout c-warn"><b class="t">ACRE 2026</b><span>Réduction de 25 % des cotisations (micro : jusqu'à la fin du 3e trimestre civil après le début). Pour les autres statuts : 25 % si revenu ≤ 36 045 €, dégressive jusqu'à 48 060 €. Réservée à certains publics (demandeurs d'emploi, 18-25 ans, RSA, quartiers prioritaires…). Demande sous 60 jours, plus automatique.</span></div>
+  </div>
+
+  <div class="section" id="b-tva">
+    <h3>TVA : quel taux sur quel produit ?</h3>
+    <div class="tablebox"><table>
+      <thead><tr><th>Produit</th><th>Taux</th><th>Pourquoi</th></tr></thead>
+      <tbody>
+        <tr><td>Pain, viennoiseries, pâtisseries, à emporter</td><td class="num">5,5 %</td><td>Pas destinés à être mangés tout de suite</td></tr>
+        <tr><td>Boissons en bouteille, canette</td><td class="num">5,5 %</td><td>Contenant qui se conserve</td></tr>
+        <tr><td>Sandwichs, salades avec couverts, quiches et pizzas chaudes</td><td class="num">10 %</td><td>Consommation immédiate</td></tr>
+        <tr><td>Boissons sans alcool en gobelet</td><td class="num">10 %</td><td>Contenant non refermable</td></tr>
+        <tr><td>Tout produit mangé sur place (tables)</td><td class="num">10 %</td><td>Restauration</td></tr>
+        <tr><td>Boissons alcoolisées</td><td class="num">20 %</td><td>Taux normal</td></tr>
+      </tbody>
+    </table></div>
+    <p class="muted small">Source : BOFiP, BOI-ANNX-000495, version du 21/08/2024. Franchise de TVA (pas de TVA facturée) si le chiffre d'affaires de ventes de l'année précédente ≤ 85 000 € ; fin immédiate au-delà de 93 500 € dans l'année.</p>
+  </div>
+
+  <div class="section" id="b-calendrier">
+    <h3>Calendrier des déclarations</h3>
+    <div class="cards">
+      <div class="card"><span class="eyebrow">Micro-entreprise</span><p class="small">Déclarer le chiffre d'affaires chaque mois ou chaque trimestre sur autoentrepreneur.urssaf.fr. CA nul = 0 € de cotisation.</p></div>
+      <div class="card"><span class="eyebrow">Société à l'IS</span><p class="small">Déclaration 2065 dans les 3 mois après la clôture. Acomptes trimestriels (15 mars, juin, sept., déc.) sauf 1re année ou IS &lt; 3 000 €. Solde au 15 mai pour une clôture au 31 décembre.</p></div>
+      <div class="card"><span class="eyebrow">CFE</span><p class="small">Paiement en ligne avant mi-décembre. Rien l'année de création.</p></div>
+      <div class="card"><span class="eyebrow">TVA</span><p class="small">Selon le régime : mensuelle, trimestrielle ou annuelle (réel simplifié).</p></div>
+    </div>
+  </div>
+
+  <div class="section" id="b-salaries">
+    <h3>Avec des salariés</h3>
+    <ul class="small" style="padding-left:1.2rem;display:grid;gap:4px">
+      <li>Déclaration préalable à l'embauche (DPAE) à l'Urssaf avant chaque embauche.</li>
+      <li>Convention collective nationale de la boulangerie-pâtisserie artisanale (19 mars 1976).</li>
+      <li>Repos hebdomadaire de 24 heures consécutives au minimum ; 6 jours de travail maximum par semaine.</li>
+      <li>Mutuelle d'entreprise, médecine du travail, déclarations sociales mensuelles (DSN).</li>
+      <li>Jusqu'à 10 salariés, l'entreprise reste artisanale (inscrite à la CMA).</li>
+    </ul>
+  </div>
+
+  <div class="section" id="b-gloss">
+    <h3>Glossaire</h3>
+    <div class="glossary">
+      <div><b>CA</b> · Chiffre d'affaires : total des ventes encaissées.</div>
+      <div><b>Urssaf</b> · Organisme qui collecte les cotisations sociales.</div>
+      <div><b>CMA</b> · Chambre de métiers et de l'artisanat.</div>
+      <div><b>DDPP</b> · Direction départementale de la protection des populations (hygiène).</div>
+      <div><b>RNE</b> · Registre national des entreprises.</div>
+      <div><b>EI</b> · Entreprise individuelle.</div>
+      <div><b>EURL / SARL</b> · Société à responsabilité limitée (1 associé / plusieurs).</div>
+      <div><b>SASU / SAS</b> · Société par actions simplifiée (1 associé / plusieurs).</div>
+      <div><b>IS</b> · Impôt sur les sociétés.</div>
+      <div><b>CFE</b> · Cotisation foncière des entreprises (impôt local).</div>
+      <div><b>SIE</b> · Service des impôts des entreprises.</div>
+      <div><b>ACRE</b> · Aide aux créateurs et repreneurs d'entreprise.</div>
+      <div><b>HACCP</b> · Méthode de maîtrise des risques d'hygiène.</div>
+      <div><b>PASS</b> · Plafond annuel de la sécurité sociale : 48 060 € en 2026.</div>
+    </div>
+  </div>
+
+  <div class="section" id="b-src">
+    <h3>Sources</h3>
+    <ul class="sources">
+      <li><a href="https://entreprendre.service-public.gouv.fr/vosdroits/F37353" target="_blank" rel="noopener">Service-Public · Régime micro-social 2026</a></li>
+      <li><a href="https://entreprendre.service-public.gouv.fr/vosdroits/F23267" target="_blank" rel="noopener">Service-Public · Micro : impôt et plafonds 2026</a></li>
+      <li><a href="https://entreprendre.service-public.gouv.fr/vosdroits/F21746" target="_blank" rel="noopener">Service-Public · Franchise de TVA 2026</a></li>
+      <li><a href="https://entreprendre.service-public.gouv.fr/vosdroits/F11677" target="_blank" rel="noopener">Service-Public · ACRE 2026</a></li>
+      <li><a href="https://entreprendre.service-public.gouv.fr/vosdroits/F23575" target="_blank" rel="noopener">Service-Public · Impôt sur les sociétés</a></li>
+      <li><a href="https://bofip.impots.gouv.fr/bofip/7204-PGP.html" target="_blank" rel="noopener">BOFiP · Taux de TVA vente à emporter</a></li>
+      <li><a href="https://bpifrance-creation.fr/activites-reglementees/boulanger" target="_blank" rel="noopener">Bpifrance Création · Activité réglementée boulanger</a></li>
+      <li><a href="https://www.justice.fr/fiche/boulanger-patissier-conditions-acces-exercice-france" target="_blank" rel="noopener">Justice.fr · Accès au métier de boulanger</a></li>
+      <li><a href="https://formalites.entreprises.gouv.fr" target="_blank" rel="noopener">Guichet unique des formalités des entreprises</a></li>
+      <li><a href="https://www.entreprises.cci-paris-idf.fr/fiches-pratiques/quelles-sont-les-charges-dune-micro-entreprise" target="_blank" rel="noopener">CCI Paris IdF · CFP et taxes de chambre</a></li>
+      <li><a href="https://www.lecoindesentrepreneurs.fr/cotisations-sociales-sarl/" target="_blank" rel="noopener">Le Coin des entrepreneurs · Cotisations du gérant</a></li>
+      <li><a href="https://mon-entreprise.urssaf.fr" target="_blank" rel="noopener">Urssaf · Simulateurs officiels</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <span>Recherches à jour au 14 octobre 2026. Textes de loi relus sur Légifrance ; chiffres 2026 tirés de Service-Public, de l'Urssaf et du BOFiP.</span>
+  <span>Le droit change souvent : vérifiez le lien officiel le jour où vous rédigez une consultation pour un client.</span>
+</footer>
+</div>
+
+<script>
+(function(){
+  var store = {get:function(k){try{return localStorage.getItem(k)}catch(e){return null}}, set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+  /* ---------- Onglets ---------- */
+  var tabs = ['accueil','aes','nettoyage','boulangerie'];
+  function panelFor(id){
+    if(tabs.indexOf(id)>=0) return id;
+    var el = document.getElementById(id);
+    var p = el && el.closest('[data-panel]');
+    return p ? p.getAttribute('data-panel') : null;
+  }
+  function show(hash, scroll){
+    var id = (hash||'').replace('#','') || 'accueil';
+    var tab = panelFor(id) || 'accueil';
+    document.querySelectorAll('[data-panel]').forEach(function(p){p.hidden = p.getAttribute('data-panel')!==tab});
+    document.querySelectorAll('nav.tabs a').forEach(function(a){ if(a.getAttribute('data-tab')===tab){a.setAttribute('aria-current','page'); var nav=a.parentNode; nav.scrollLeft = a.offsetLeft - 16} else {a.removeAttribute('aria-current')} });
+    if(scroll){
+      var target = tabs.indexOf(id)>=0 ? null : document.getElementById(id);
+      if(target){ target.scrollIntoView({block:'start'}) } else { window.scrollTo(0,0) }
+    }
+  }
+  window.addEventListener('hashchange', function(){ show(location.hash, true) });
+  show(location.hash, false);
+
+  /* ---------- Copier ---------- */
+  document.querySelectorAll('button.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var el = document.getElementById(btn.getAttribute('data-target'));
+      var text = el.innerText.trim();
+      var orig = btn.textContent;
+      function done(m){ btn.textContent = m; setTimeout(function(){btn.textContent = orig}, 1600) }
+      function fallback(){ var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done('Texte sélectionné : Ctrl+C') }
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){done('Copié')}, fallback) } else { fallback() }
+    });
+  });
+
+  /* ---------- Cases à cocher ---------- */
+  document.querySelectorAll('.checklist input[type=checkbox]').forEach(function(cb){
+    if(store.get('chk-'+cb.id)==='1') cb.checked = true;
+    cb.addEventListener('change', function(){ store.set('chk-'+cb.id, cb.checked?'1':'0'); updateProgress() });
+  });
+  var lists = {aes:'aes', net:'net', pap:'pap'};
+  function updateProgress(){
+    Object.keys(lists).forEach(function(k){
+      var boxes = document.querySelectorAll('[data-list="'+k+'"] input');
+      var n = 0; boxes.forEach(function(b){ if(b.checked) n++ });
+      var c = document.querySelector('[data-count="'+k+'"]'); if(c) c.textContent = n+' / '+boxes.length;
+      var bar = document.querySelector('[data-bar="'+k+'"]'); if(bar) bar.style.width = (boxes.length? n/boxes.length*100 : 0)+'%';
+    });
+  }
+  updateProgress();
+
+  /* ---------- Boutons de choix ---------- */
+  function wireChoices(root, onChange){
+    root.querySelectorAll('.choices').forEach(function(group){
+      var multi = group.getAttribute('data-multi')==='1';
+      group.querySelectorAll('button').forEach(function(b){
+        b.setAttribute('aria-pressed','false');
+        b.addEventListener('click', function(){
+          if(multi){ b.setAttribute('aria-pressed', b.getAttribute('aria-pressed')==='true'?'false':'true') }
+          else { group.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed','false')}); b.setAttribute('aria-pressed','true') }
+          onChange();
+        });
+      });
+    });
+  }
+  function val(root, q){ var b = root.querySelector('[data-q="'+q+'"] button[aria-pressed="true"]'); return b ? b.getAttribute('data-v') : null }
+  function vals(root, q){ return Array.prototype.map.call(root.querySelectorAll('[data-q="'+q+'"] button[aria-pressed="true"]'), function(b){return b.getAttribute('data-v')}) }
+  function card(title, text, pill){ return '<div class="rcard"><b>'+title+(pill?' '+pill:'')+'</b><span class="small">'+text+'</span></div>' }
+
+  /* ---------- Outil AES ---------- */
+  var aesTool = document.getElementById('aesTool'), aesRes = document.getElementById('aesResult');
+  function aes(){
+    var nat = val(aesTool,'nat'), ans = val(aesTool,'ans'), sit = vals(aesTool,'sit');
+    if(!nat || !ans){ aesRes.innerHTML = '<p class="muted small">Choisissez au moins la nationalité et la durée de présence.</p>'; return }
+    var out = [], warn = [];
+    var has = function(x){ return sit.indexOf(x)>=0 };
+    if(has('oqtf')) warn.push(card('Risque : OQTF de moins de 3 ans', 'Sans élément nouveau, un dépôt expose à une nouvelle OQTF, voire une assignation à résidence (L. 731-1, L. 432-1-1). Prudence.', '<span class="pill p-risk">Risque</span>'));
+    if(has('casier')) warn.push(card('Risque : casier judiciaire', 'Bloquant pour L. 435-4 si mention au bulletin n° 2. Ailleurs, la préfecture appréciera la menace à l\'ordre public (L. 412-5).', '<span class="pill p-risk">Risque</span>'));
+    if(has('ase15')) out.push(card('L. 423-22 · titre de plein droit', 'Jeune confié à l\'ASE au plus tard à 16 ans : carte « vie privée et familiale », sans droit de visa de régularisation.', '<span class="pill p-ok">Prioritaire</span>'));
+    if(has('fam')) out.push(card(nat==='alg'?'Accord franco-algérien, art. 6 5° · vie privée et familiale':'L. 423-23 · vie privée et familiale', 'À tester en premier : titre de plein droit, contrôle complet du juge (article 8 CEDH). Les liens doivent être intenses, anciens et stables.', '<span class="pill p-ok">Prioritaire</span>'));
+    if(nat==='alg' && ans==='p10') out.push(card('Accord franco-algérien, art. 6 1°', 'Plus de 10 ans de résidence prouvée : certificat de résidence de plein droit. Attention : les périodes sous interdiction de retour ne comptent pas.', '<span class="pill p-ok">Prioritaire</span>'));
+    if(has('ase16')) out.push(card('L. 435-3 · jeune ASE 16-18 ans', 'Formation qualifiante depuis 6 mois au moins. Demande avant le 19e anniversaire.', '<span class="pill p-info">À étudier</span>'));
+    if(has('oacas')) out.push(card('L. 435-2 · OACAS', '3 ans d\'activité ininterrompue, activité réelle et sérieuse, perspectives d\'intégration.', '<span class="pill p-info">À étudier</span>'));
+    if(has('tension')){
+      if(nat==='alg') out.push(card('Métier en tension : pas de L. 435-4', 'Les Algériens relèvent de l\'accord de 1968 ; le préfet peut régulariser par son pouvoir discrétionnaire.', '<span class="pill p-warn">Limité</span>'));
+      else if(ans==='m3') out.push(card('L. 435-4 · pas encore possible', 'Il faut 3 ans de résidence ininterrompue. Et le dispositif s\'arrête le 31/12/2026.', '<span class="pill p-warn">Conditions non remplies</span>'));
+      else out.push(card('L. 435-4 · métiers en tension', '12 mois de salariat sur 24 dans un métier de la liste PACA, emploi actuel, casier B2 vierge. Déposer avant le 31/12/2026.', '<span class="pill p-risk">Urgent</span>'));
+    }
+    if(has('travail') || (!has('fam') && !has('ase15') && !has('ase16') && !has('oacas') && !has('tension'))){
+      if(nat==='alg') out.push(card('Pouvoir général de régularisation du préfet', 'L. 435-1 n\'est pas invocable par un Algérien (CE, avis, 22 mars 2010, n° 333679), mais le préfet peut régulariser.', '<span class="pill p-warn">Discrétionnaire</span>'));
+      else if((nat==='tun' || nat==='mar') && has('travail')) out.push(card('Carte « salarié » : accord bilatéral', 'L. 435-1 n\'est pas invocable pour une carte « salarié » (CE 2012 et 2014). Le préfet garde un pouvoir discrétionnaire. La voie « vie privée et familiale » de L. 435-1 reste possible.', '<span class="pill p-warn">Discrétionnaire</span>'));
+      else out.push(card('L. 435-1 · motifs humanitaires ou exceptionnels', ans==='m3'||ans==='3a7' ? 'Possible mais difficile : la circulaire de 2025 retient 7 ans comme repère d\'intégration.' : 'Base générale de régularisation. Réunir preuves d\'intégration, de français et de travail.', '<span class="pill p-info">À étudier</span>'));
+    }
+    if(ans==='p10' && nat!=='alg') out.push(card('Commission du titre de séjour obligatoire', 'Plus de 10 ans prouvés année par année : le préfet doit consulter la commission avant de refuser (L. 435-1 al. 2, L. 432-13 4°).', '<span class="pill p-ok">Garantie</span>'));
+    aesRes.innerHTML = '<span class="eyebrow">Bases à étudier, dans l\'ordre</span>' + warn.join('') + out.join('');
+  }
+  wireChoices(aesTool, aes); aes();
+
+  /* ---------- Outil organisateur ---------- */
+  var orgaTool = document.querySelector('#n-orga .tool'), orgaRes = document.getElementById('orgaResult');
+  var orgaTxt = {
+    asso: [['Qui signe', 'Le président ou un membre mandaté par l\'association.'], ['Assurance', 'Responsabilité civile de l\'association : vérifier par écrit qu\'elle couvre l\'événement et les bénévoles non adhérents.'], ['Atout', 'Une association est l\'interlocuteur le plus habituel pour la Ville et la Métropole.']],
+    ent: [['Qui signe', 'Rawand, en tant que représentante de sa société.'], ['Assurance', 'Sa responsabilité civile professionnelle couvre son métier, pas forcément un événement public. Demander à l\'assureur une extension écrite pour cette journée.'], ['À savoir', 'Ce n\'est pas l\'activité de la société : présenter l\'action comme bénévole et citoyenne, sans vente ni publicité commerciale sur place. Possibilité de s\'associer à une association locale déjà rodée (ex. 1 Déchet par Jour Marseille) pour porter l\'organisation.']],
+    hab: [['Qui signe', 'Un groupe sans statut n\'a pas d\'existence juridique : une ou plusieurs personnes signent en leur nom et sont responsables.'], ['Assurance', 'Responsabilité civile personnelle de chaque organisateur (souvent incluse dans l\'assurance habitation) : vérifier qu\'elle couvre l\'organisation d\'un événement.'], ['Conseil', 'Créer une association (déclaration en préfecture, gratuite) ou rejoindre une association existante protège les organisateurs.']],
+    part: [['Qui signe', 'La personne elle-même, en son nom.'], ['Assurance', 'Sa responsabilité civile personnelle, à faire confirmer par écrit.'], ['Conseil', 'Seul, la responsabilité est entière. S\'adosser à une association ou au World Cleanup Day (adhésion 5 €) réduit le risque.']]
+  };
+  function orga(){
+    var v = val(orgaTool,'orga');
+    if(!v){ orgaRes.innerHTML = '<p class="muted small">Choisissez qui organise pour voir les règles qui s\'appliquent.</p>'; return }
+    orgaRes.innerHTML = orgaTxt[v].map(function(r){return card(r[0], r[1])}).join('') + '<p class="muted small">Dans tous les cas : demande à la Ville, déclaration à la préfecture de police, enlèvement des déchets avec la Métropole.</p>';
+  }
+  wireChoices(orgaTool, orga); orga();
+
+  /* ---------- Simulateurs ---------- */
+  var fmt = new Intl.NumberFormat('fr-FR', {style:'currency', currency:'EUR', maximumFractionDigits:0});
+  var fmt2 = new Intl.NumberFormat('fr-FR', {style:'currency', currency:'EUR', minimumFractionDigits:2, maximumFractionDigits:2});
+  function num(id){ var v = parseFloat(document.getElementById(id).value); return isFinite(v) && v>0 ? v : 0 }
+  function row(label, value, total){ return '<div class="row'+(total?' total':'')+'"><span>'+label+'</span><span>'+value+'</span></div>' }
+
+  function micro(){
+    var ca = num('ca'), dep = num('dep');
+    var acre = document.getElementById('acre').checked, vl = document.getElementById('vl').checked;
+    var tauxCot = acre ? 0.123*0.75 : 0.123;
+    var cot = ca*tauxCot, cfp = ca*0.003, cma = ca*0.0022, imp = vl ? ca*0.01 : 0;
+    var urssaf = cot + cfp + cma;
+    var reste = ca - urssaf - imp - dep;
+    var html = row('Cotisations sociales ('+(acre?'9,225':'12,3')+' %)', fmt.format(cot))
+      + row('Formation professionnelle (0,3 %)', fmt.format(cfp))
+      + row('Chambre de métiers (0,22 %)', fmt.format(cma))
+      + row('Total versé à l\'Urssaf', fmt.format(urssaf), true)
+      + (vl ? row('Impôt sur le revenu libératoire (1 %)', fmt.format(imp)) : '')
+      + row('Vos dépenses', fmt.format(dep))
+      + row('Reste pour vivre (avant CFE'+(vl?'':' et impôt sur le revenu')+')', fmt.format(reste), true)
+      + row('Par mois', fmt.format(reste/12));
+    document.getElementById('microOut').innerHTML = html;
+    var tot = Math.max(ca, urssaf+imp+dep, 1);
+    document.getElementById('s-cot').style.width = (urssaf/tot*100)+'%';
+    document.getElementById('s-imp').style.width = (imp/tot*100)+'%';
+    document.getElementById('s-dep').style.width = (Math.min(dep,tot)/tot*100)+'%';
+    document.getElementById('s-rest').style.width = (Math.max(reste,0)/tot*100)+'%';
+    var w = [];
+    if(ca > 203100) w.push('<div class="callout c-risk"><b class="t">Plafond dépassé</b><span>Au-delà de 203 100 € de ventes, la micro-entreprise n\'est plus possible.</span></div>');
+    if(ca > 93500) w.push('<div class="callout c-warn"><b class="t">TVA due</b><span>Au-delà de 93 500 € dans l\'année, la TVA s\'applique dès le dépassement (85 000 € sur l\'année précédente).</span></div>');
+    else if(ca > 85000) w.push('<div class="callout c-warn"><b class="t">TVA l\'an prochain</b><span>Au-delà de 85 000 € cette année, la TVA s\'appliquera à partir du 1er janvier suivant.</span></div>');
+    if(reste < 0) w.push('<div class="callout c-risk"><b class="t">Activité déficitaire</b><span>Les dépenses dépassent ce qui reste : la micro-entreprise, qui ne déduit pas les dépenses, est probablement inadaptée.</span></div>');
+    else if(ca>0 && dep/ca > 0.29) w.push('<div class="callout c-info"><b class="t">Comparer avec le réel</b><span>Vos dépenses dépassent 29 % du chiffre d\'affaires, alors que l\'abattement fiscal de la micro est de 71 % : un régime au réel peut être plus avantageux. À vérifier avec un expert-comptable.</span></div>');
+    document.getElementById('microWarn').innerHTML = w.join('');
+  }
+  function is(){
+    var b = num('benef');
+    var t15 = Math.min(b, 42500)*0.15, t25 = Math.max(b-42500, 0)*0.25;
+    document.getElementById('isOut').innerHTML = row('15 % sur les 42 500 premiers euros', fmt.format(t15)) + row('25 % au-delà', fmt.format(t25)) + row('Impôt sur les sociétés', fmt.format(t15+t25), true) + row('Taux moyen', (b? ((t15+t25)/b*100).toFixed(1).replace('.',',') : '0')+' %');
+  }
+  function tva(){
+    var ttc = num('ttc'), t = parseFloat(document.getElementById('taux').value);
+    var ht = ttc/(1+t/100), v = ttc-ht;
+    document.getElementById('tvaOut').innerHTML = row('Prix hors taxe', fmt2.format(ht)) + row('TVA à reverser ('+String(t).replace('.',',')+' %)', fmt2.format(v)) + row('Prix affiché TTC', fmt2.format(ttc), true);
+  }
+  ['ca','dep','acre','vl'].forEach(function(id){ document.getElementById(id).addEventListener('input', micro); document.getElementById(id).addEventListener('change', micro) });
+  document.getElementById('benef').addEventListener('input', is);
+  ['ttc','taux'].forEach(function(id){ document.getElementById(id).addEventListener('input', tva); document.getElementById(id).addEventListener('change', tva) });
+  micro(); is(); tva();
+})();
+</script>
+
+</body></html>
